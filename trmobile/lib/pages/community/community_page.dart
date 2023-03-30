@@ -14,22 +14,24 @@ class CommunityPage extends StatefulWidget {
 }
 
 class _CommunityPageState extends State<CommunityPage> {
-  Color blackColor = const Color.fromARGB(255, 43, 46, 51);
-  Color whiteColor = Colors.white;
-  Color pinkColor = const Color.fromARGB(255, 253, 183, 200);
+  final Color _blackColor = const Color.fromARGB(255, 43, 46, 51);
+  final Color _whiteColor = Colors.white;
+  final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
   static const loadingTag = "##loading##"; //表尾标记
-  var _words = <String>[loadingTag];
+  final _words = <String>[loadingTag];
 
   bool flag_1 = false;
   bool flag_2 = true;
   bool flag_3 = true;
   bool flag_4 = true;
   bool flag_5 = true;
+
   List imageList = [
     'lib/assets/images/A.png',
     'lib/assets/images/B.png',
     'lib/assets/images/C.png'
   ];
+
   @override
   void initState() {
     super.initState();
@@ -59,18 +61,19 @@ class _CommunityPageState extends State<CommunityPage> {
         child: Column(
           children: [
             const SizedBox(height: 35),
-            topNavBar(),
+            _topNavBar(context),
             const SizedBox(height: 13),
-            conText(context),
+            _contextShow(context),
             const SizedBox(height: 17),
-            bottomNav(),
+            _bottomNav(context),
           ],
         ),
       ),
     );
   }
 
-  Widget topNavBar() {
+  //星球导航栏
+  Widget _topNavBar(context) {
     return Container(
       alignment: Alignment.center,
       width: 335,
@@ -104,7 +107,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                       backgroundColor: MaterialStateProperty.all(
-                          flag_1 ? blackColor : whiteColor),
+                          flag_1 ? _blackColor : _whiteColor),
                     ),
                     child: Row(
                       children: [
@@ -113,24 +116,25 @@ class _CommunityPageState extends State<CommunityPage> {
                             0xe617,
                             fontFamily: "PlanetIcons",
                           ),
-                          color: flag_1 ? whiteColor : blackColor,
+                          color: flag_1 ? _whiteColor : _blackColor,
                           size: 24,
                         ),
                         Text("焦虑星",
                             style: TextStyle(
-                                color: flag_1 ? whiteColor : blackColor,
+                                color: flag_1 ? _whiteColor : _blackColor,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
+                    //焦虑星
                     onPressed: () {
-                      setState(() {
+                      if (mounted) {
                         flag_1 = false;
                         flag_2 = true;
                         flag_3 = true;
                         flag_4 = true;
                         flag_5 = true;
-                      });
+                      }
                     },
                   ),
                 ),
@@ -146,7 +150,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                       backgroundColor: MaterialStateProperty.all(
-                          flag_2 ? blackColor : whiteColor),
+                          flag_2 ? _blackColor : _whiteColor),
                     ),
                     child: Row(
                       children: [
@@ -156,23 +160,25 @@ class _CommunityPageState extends State<CommunityPage> {
                             fontFamily: "PlanetIcons",
                           ),
                           size: 24,
-                          color: flag_2 ? whiteColor : blackColor,
+                          color: flag_2 ? _whiteColor : _blackColor,
                         ),
                         Text("倦怠星",
                             style: TextStyle(
-                                color: flag_2 ? whiteColor : blackColor,
+                                color: flag_2 ? _whiteColor : _blackColor,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
                     onPressed: () {
-                      setState(() {
-                        flag_1 = true;
-                        flag_2 = false;
-                        flag_3 = true;
-                        flag_4 = true;
-                        flag_5 = true;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          flag_1 = true;
+                          flag_2 = false;
+                          flag_3 = true;
+                          flag_4 = true;
+                          flag_5 = true;
+                        });
+                      }
                     },
                   ),
                 ),
@@ -188,7 +194,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                       backgroundColor: MaterialStateProperty.all(
-                          flag_3 ? blackColor : whiteColor),
+                          flag_3 ? _blackColor : _whiteColor),
                     ),
                     child: Row(
                       children: [
@@ -197,24 +203,26 @@ class _CommunityPageState extends State<CommunityPage> {
                             0xe610,
                             fontFamily: "PlanetIcons",
                           ),
-                          color: flag_3 ? whiteColor : blackColor,
+                          color: flag_3 ? _whiteColor : _blackColor,
                           size: 24,
                         ),
                         Text("失落星",
                             style: TextStyle(
-                                color: flag_3 ? whiteColor : blackColor,
+                                color: flag_3 ? _whiteColor : _blackColor,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
                     onPressed: () {
-                      setState(() {
-                        flag_1 = true;
-                        flag_2 = true;
-                        flag_3 = false;
-                        flag_4 = true;
-                        flag_5 = true;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          flag_1 = true;
+                          flag_2 = true;
+                          flag_3 = false;
+                          flag_4 = true;
+                          flag_5 = true;
+                        });
+                      }
                     },
                   ),
                 ),
@@ -230,7 +238,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                       backgroundColor: MaterialStateProperty.all(
-                          flag_4 ? blackColor : whiteColor),
+                          flag_4 ? _blackColor : _whiteColor),
                     ),
                     child: Row(
                       children: [
@@ -239,24 +247,26 @@ class _CommunityPageState extends State<CommunityPage> {
                             0xe615,
                             fontFamily: "PlanetIcons",
                           ),
-                          color: flag_4 ? whiteColor : blackColor,
+                          color: flag_4 ? _whiteColor : _blackColor,
                           size: 24,
                         ),
                         Text("不开星",
                             style: TextStyle(
-                                color: flag_4 ? whiteColor : blackColor,
+                                color: flag_4 ? _whiteColor : _blackColor,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
                     onPressed: () {
-                      setState(() {
-                        flag_1 = true;
-                        flag_2 = true;
-                        flag_3 = true;
-                        flag_4 = false;
-                        flag_5 = true;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          flag_1 = true;
+                          flag_2 = true;
+                          flag_3 = true;
+                          flag_4 = false;
+                          flag_5 = true;
+                        });
+                      }
                     },
                   ),
                 ),
@@ -272,7 +282,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20))),
                       backgroundColor: MaterialStateProperty.all(
-                          flag_5 ? blackColor : whiteColor),
+                          flag_5 ? _blackColor : _whiteColor),
                     ),
                     child: Row(
                       children: [
@@ -281,24 +291,26 @@ class _CommunityPageState extends State<CommunityPage> {
                             0xe611,
                             fontFamily: "PlanetIcons",
                           ),
-                          color: flag_5 ? whiteColor : blackColor,
+                          color: flag_5 ? _whiteColor : _blackColor,
                           size: 24,
                         ),
                         Text("痛苦星",
                             style: TextStyle(
-                                color: flag_5 ? whiteColor : blackColor,
+                                color: flag_5 ? _whiteColor : _blackColor,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w400)),
                       ],
                     ),
                     onPressed: () {
-                      setState(() {
-                        flag_1 = true;
-                        flag_2 = true;
-                        flag_3 = true;
-                        flag_4 = true;
-                        flag_5 = false;
-                      });
+                      if (mounted) {
+                        setState(() {
+                          flag_1 = true;
+                          flag_2 = true;
+                          flag_3 = true;
+                          flag_4 = true;
+                          flag_5 = false;
+                        });
+                      }
                     },
                   ),
                 ),
@@ -310,8 +322,10 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  Widget searchBar(context) {
-    return SizedBox(
+  //搜索bar
+  Widget _searchBar(context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
       width: 320,
       height: 35,
       child: Row(
@@ -396,6 +410,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   shape: MaterialStateProperty.all(RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20))),
                 ),
+                //搜索按钮
                 onPressed: () {},
                 child: const Text(
                   "搜索",
@@ -412,7 +427,8 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  Widget conText(context) {
+  //生成listview
+  Widget _contextShow(context) {
     return Container(
       height: 601,
       width: 335,
@@ -436,9 +452,10 @@ class _CommunityPageState extends State<CommunityPage> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            searchBar(context),
+            //搜索bar
+            _searchBar(context),
             SizedBox(
-              height: 540,
+              height: 530,
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
@@ -488,329 +505,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       }
                     }
                     //社区内容现实列表
-                    return Container(
-                      width: 335,
-                      // decoration: const BoxDecoration(color: Colors.brown),
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Container(
-                            width: 335,
-                            height: 55,
-                            // decoration:
-                            //     const BoxDecoration(color: Colors.amberAccent),
-                            child: Row(
-                              children: [
-                                const SizedBox(
-                                  width: 10,
-                                ),
-                                const SizedBox(
-                                  //头像
-                                  height: 50,
-                                  width: 50,
-                                  // decoration: const BoxDecoration(
-                                  //     color: Color.fromARGB(255, 64, 249, 255)),
-                                  child: CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        "https://www.itying.com/images/flutter/2.png"),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 60,
-                                  width: 270,
-                                  // decoration: const BoxDecoration(
-                                  //     color: Color.fromARGB(255, 255, 64, 64)),
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      SizedBox(
-                                        height: 30,
-                                        width: 270,
-                                        child: Row(children: [
-                                          SizedBox(
-                                            height: 30,
-                                            width: 220,
-                                            // decoration: const BoxDecoration(
-                                            //   color: Color.fromARGB(
-                                            //       255, 64, 255, 102),
-                                            // ),
-                                            child: Row(
-                                              children: [
-                                                const SizedBox(
-                                                  width: 10,
-                                                ),
-                                                SizedBox(
-                                                  // decoration: const BoxDecoration(
-                                                  //   color: Color.fromARGB(
-                                                  //       255, 64, 188, 255),
-                                                  // ),
-                                                  child: Column(
-                                                    //昵称
-                                                    children: const [
-                                                      SizedBox(
-                                                        height: 10,
-                                                      ),
-                                                      Text("我的名字",
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            color:
-                                                                Color.fromARGB(
-                                                                    230,
-                                                                    48,
-                                                                    48,
-                                                                    48),
-                                                          )),
-                                                    ],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            //关注按钮
-                                            height: 25,
-                                            width: 44,
-                                            child: TextButton(
-                                              style: ButtonStyle(
-                                                padding:
-                                                    MaterialStateProperty.all(
-                                                  const EdgeInsets.all(0),
-                                                ),
-                                                overlayColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.transparent),
-                                                shape:
-                                                    MaterialStateProperty.all(
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15),
-                                                  ),
-                                                ),
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.black),
-                                              ),
-                                              onPressed: () {},
-                                              child: const Text(
-                                                "关注",
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w500,
-                                                    color: Colors.white),
-                                              ),
-                                            ),
-                                          )
-                                        ]),
-                                      ),
-                                      SizedBox(
-                                        height: 13,
-                                        width: 270,
-                                        child: Row(
-                                          children: const [
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                            SizedBox(
-                                              //帖子发布时间
-                                              height: 13,
-                                              width: 100,
-                                              // decoration: const BoxDecoration(
-                                              //   color: Color.fromARGB(
-                                              //       255, 217, 64, 255),
-                                              // ),
-                                              child: Text(
-                                                "2022/11/22  23:09",
-                                                style: TextStyle(
-                                                    fontSize: 11,
-                                                    color: Colors.grey),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 10,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(
-                            height: 8,
-                          ),
-                          SizedBox(
-                            //图片设置为轮播图
-                            width: double.infinity,
-                            // decoration: const BoxDecoration(
-                            //     color: Color.fromARGB(255, 131, 255, 64)),
-                            child: AspectRatio(
-                              // 配置宽高比
-                              aspectRatio: 1 / 1,
-                              child: Swiper(
-                                itemBuilder: (BuildContext context, int index) {
-                                  // 配置图片地址
-                                  return Image.asset(
-                                    imageList[index],
-                                    fit: BoxFit.contain,
-                                  );
-                                },
-                                // 配置图片数量
-                                itemCount: imageList.length,
-                                // 底部分页器
-                                pagination: const SwiperPagination(
-                                  builder: DotSwiperPaginationBuilder(
-                                    activeColor:
-                                        Color.fromARGB(255, 237, 173, 204),
-                                    size: 6.0,
-                                    activeSize: 6.0,
-                                  ),
-                                ),
-                                // 无限循环
-                                loop: true,
-                                // 自动轮播
-                                // autoplay: true,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            width: 335,
-                            height: 40,
-                            child: Row(children: [
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              SizedBox(
-                                //文章内容
-                                width: 320,
-                                height: 20,
-                                child: Text.rich(TextSpan(
-                                  text:
-                                      '''轻轻的我走了正正如我轻轻的来如我轻轻的来正如我轻轻的来正如我轻轻的来正如我轻轻的来；
-正如我轻轻的来；
-我轻轻的招手，
-作别西天的云彩。''',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.w300,
-                                    fontSize: 13,
-                                  ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => DetialPage(
-                                                  ImageList: imageList)));
-                                    },
-                                )),
-                              ),
-                            ]),
-                          ),
-                          Container(
-                            width: 335,
-                            child: Row(children: [
-                              const SizedBox(
-                                width: 6,
-                              ),
-                              Container(
-                                //点赞按钮
-                                width: 325,
-                                height: 22,
-                                // decoration: const BoxDecoration(
-                                //     color: Color.fromARGB(255, 80, 64, 255)),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 30,
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: const Icon(
-                                        IconData(
-                                          0xe616,
-                                          fontFamily: "MyIcons",
-                                        ),
-                                        size: 20,
-                                        color: Color.fromARGB(255, 231, 62, 50),
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(left: 3),
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Container(
-                                            // decoration: const BoxDecoration(
-                                            //   color: Color.fromARGB(
-                                            //       255, 255, 64, 245),
-                                            // ),
-                                            child: const Text(
-                                              "24",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 12),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(left: 25),
-                                      decoration: const BoxDecoration(
-                                        color:
-                                            Color.fromARGB(255, 249, 249, 249),
-                                      ),
-                                      child: const Icon(
-                                        IconData(
-                                          0xe60a,
-                                          fontFamily: "MyIcons",
-                                        ),
-                                        color: Color.fromARGB(255, 231, 62, 50),
-                                        size: 20,
-                                      ),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.only(left: 3),
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Container(
-                                            width: 40,
-                                            height: 14,
-                                            // decoration: const BoxDecoration(
-                                            //   color: Color.fromARGB(
-                                            //       255, 255, 64, 245),
-                                            // ),
-                                            child: const Text(
-                                              "22",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.w300,
-                                                  fontSize: 12),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ]),
-                          ),
-                          const SizedBox(
-                            height: 15,
-                          )
-                        ],
-                      ),
-                    );
+                    return _postShow(context);
                   },
                   separatorBuilder: (context, index) =>
                       const Divider(height: .0),
@@ -823,20 +518,138 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
+  //每个帖子的导航栏
+  Widget _contextNavBar(context) {
+    return Row(
+      children: [
+        const SizedBox(
+          width: 10,
+        ),
+        const SizedBox(
+          //发帖人头像
+          height: 45,
+          width: 45,
+          child: CircleAvatar(
+            backgroundImage:
+                NetworkImage("https://www.itying.com/images/flutter/2.png"),
+          ),
+        ),
+        SizedBox(
+          height: 60,
+          width: 270,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 5,
+              ),
+              SizedBox(
+                height: 30,
+                width: 270,
+                child: Row(children: [
+                  SizedBox(
+                    height: 30,
+                    width: 220,
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        SizedBox(
+                          child: Column(
+                            children: const [
+                              SizedBox(
+                                height: 10,
+                              ),
+                              //发帖人昵称
+                              Text("我的名字",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    color: Color.fromARGB(230, 48, 48, 48),
+                                  )),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 25,
+                    width: 44,
+                    child: TextButton(
+                      style: ButtonStyle(
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.all(0),
+                        ),
+                        overlayColor:
+                            MaterialStateProperty.all(Colors.transparent),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                      ),
+                      //关注按钮
+                      onPressed: () {},
+                      child: const Text(
+                        "关注",
+                        style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white),
+                      ),
+                    ),
+                  )
+                ]),
+              ),
+              SizedBox(
+                height: 13,
+                width: 270,
+                child: Row(
+                  children: const [
+                    SizedBox(
+                      width: 10,
+                    ),
+                    SizedBox(
+                      height: 13,
+                      width: 100,
+                      //帖子发布时间
+                      child: Text(
+                        "2022/11/22  23:09",
+                        style: TextStyle(fontSize: 11, color: Colors.grey),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   void _retrieveData() {
     Future.delayed(const Duration(seconds: 2)).then((e) {
-      setState(() {
-        //重新构建列表
-        _words.insertAll(
-          _words.length - 1,
-          //每次生成20个单词
-          generateWordPairs().take(20).map((e) => e.asPascalCase).toList(),
-        );
-      });
+      if (mounted) {
+        setState(() {
+          //重新构建列表
+          _words.insertAll(
+            _words.length - 1,
+            //每次生成20个单词
+            generateWordPairs().take(20).map((e) => e.asPascalCase).toList(),
+          );
+        });
+      }
     });
   }
 
-  Widget bottomNav() {
+  //底部导航栏
+  Widget _bottomNav(context) {
     return Container(
       alignment: Alignment.center,
       width: 340,
@@ -866,14 +679,15 @@ class _CommunityPageState extends State<CommunityPage> {
                       fontFamily: "MyIcons",
                     ),
                     size: 20,
-                    color: pinkColor,
+                    color: _pinkColor,
                   ),
                   Text(
                     "社区",
-                    style: TextStyle(color: pinkColor, fontSize: 11),
+                    style: TextStyle(color: _pinkColor, fontSize: 11),
                   ),
                 ],
               ),
+              //社区按钮
               onPressed: () {},
             ),
           ),
@@ -894,14 +708,15 @@ class _CommunityPageState extends State<CommunityPage> {
                       fontFamily: "MyIcons",
                     ),
                     size: 20,
-                    color: whiteColor,
+                    color: _whiteColor,
                   ),
                   Text(
                     "助眠",
-                    style: TextStyle(color: whiteColor, fontSize: 11),
+                    style: TextStyle(color: _whiteColor, fontSize: 11),
                   ),
                 ],
               ),
+              //助眠按钮
               onPressed: () {},
             ),
           ),
@@ -930,6 +745,7 @@ class _CommunityPageState extends State<CommunityPage> {
                   ),
                 ],
               ),
+              //文字编辑按钮
               onPressed: () {
                 showBottomSheet();
               },
@@ -952,14 +768,15 @@ class _CommunityPageState extends State<CommunityPage> {
                       fontFamily: "MyIcons",
                     ),
                     size: 20,
-                    color: whiteColor,
+                    color: _whiteColor,
                   ),
                   Text(
                     "信箱",
-                    style: TextStyle(color: whiteColor, fontSize: 11),
+                    style: TextStyle(color: _whiteColor, fontSize: 11),
                   ),
                 ],
               ),
+              //信箱按钮
               onPressed: () {},
             ),
           ),
@@ -976,15 +793,16 @@ class _CommunityPageState extends State<CommunityPage> {
                 children: [
                   Icon(
                     Icons.home,
-                    color: whiteColor,
+                    color: _whiteColor,
                     size: 20,
                   ),
                   Text(
                     "家",
-                    style: TextStyle(color: whiteColor, fontSize: 11),
+                    style: TextStyle(color: _whiteColor, fontSize: 11),
                   ),
                 ],
               ),
+              //家按钮
               onPressed: () {},
             ),
           ),
@@ -1004,6 +822,7 @@ class _CommunityPageState extends State<CommunityPage> {
         context: context);
   }
 
+  //发帖
   Widget buildBottomSheetWidget(BuildContext context) {
     return SizedBox(
       child: Column(
@@ -1020,15 +839,16 @@ class _CommunityPageState extends State<CommunityPage> {
                   child: TextButton(
                     style: ButtonStyle(
                       overlayColor: MaterialStateProperty.all(
-                          Color.fromARGB(0, 157, 45, 45)),
+                          const Color.fromARGB(0, 157, 45, 45)),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(7),
                         ),
                       ),
                       backgroundColor: MaterialStateProperty.all(
-                          Color.fromARGB(255, 253, 183, 200)),
+                          const Color.fromARGB(255, 253, 183, 200)),
                     ),
+                    //发布按钮
                     onPressed: () {},
                     child: const Text(
                       "发布",
@@ -1046,6 +866,7 @@ class _CommunityPageState extends State<CommunityPage> {
                       Icons.close,
                       color: Colors.black54,
                     ),
+                    //关闭按钮
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -1057,6 +878,7 @@ class _CommunityPageState extends State<CommunityPage> {
           const SizedBox(
             height: 150,
             width: 340,
+            //文字输入框
             child: TextField(
               keyboardType: TextInputType.multiline,
               maxLines: 6,
@@ -1077,10 +899,196 @@ class _CommunityPageState extends State<CommunityPage> {
                   fontWeight: FontWeight.w300),
             ),
           ),
+          //TODO 添加图片
           Container(
             decoration: BoxDecoration(color: Color.fromARGB(255, 29, 28, 26)),
             height: 232,
           ),
+        ],
+      ),
+    );
+  }
+
+  //每个帖子的图片
+  Widget _swiperPic(context) {
+    return SizedBox(
+      //图片设置为轮播图
+      width: double.infinity,
+      child: AspectRatio(
+        // 配置宽高比
+        aspectRatio: 1 / 1,
+        child: Swiper(
+          itemBuilder: (BuildContext context, int index) {
+            // 配置图片地址
+            return Image.asset(
+              imageList[index],
+              fit: BoxFit.contain,
+            );
+          },
+          // 配置图片数量
+          itemCount: imageList.length,
+          // 底部分页器
+          pagination: const SwiperPagination(
+            builder: DotSwiperPaginationBuilder(
+              activeColor: Color.fromARGB(255, 237, 173, 204),
+              size: 6.0,
+              activeSize: 6.0,
+            ),
+          ),
+          // 无限循环
+          loop: true,
+          // 自动轮播
+          // autoplay: true,
+        ),
+      ),
+    );
+  }
+
+  //每个帖子的文字内容
+  Widget _textContext(context) {
+    return SizedBox(
+      width: 335,
+      height: 40,
+      child: Row(children: [
+        const SizedBox(
+          width: 10,
+        ),
+        SizedBox(
+          //文章内容
+          width: 320,
+          height: 20,
+          child: Text.rich(
+            TextSpan(
+              text: '''轻轻的我走了正正如我轻轻的来如我轻轻的来正如我轻轻的来正如我轻轻的来正如我轻轻的来jicdji''',
+              style: const TextStyle(
+                fontWeight: FontWeight.w300,
+                fontSize: 13,
+                overflow: TextOverflow.ellipsis,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              DetialPage(recipeImageList: imageList)));
+                },
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  //点赞和评论
+  Widget _likeBtn(context) {
+    return SizedBox(
+      width: 335,
+      child: Row(children: [
+        SizedBox(
+          width: 325,
+          height: 25,
+          child: Row(
+            children: [
+              Container(
+                width: 25,
+                transform: Matrix4.translationValues(0.0, -5, 0.0),
+                //点赞按钮
+                child: IconButton(
+                  icon: const Icon(
+                    IconData(
+                      0xe616,
+                      fontFamily: "MyIcons",
+                    ),
+                    size: 20,
+                    color: Color.fromARGB(255, 231, 62, 50),
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 5),
+                child: Column(
+                  children: const [
+                    SizedBox(
+                      height: 8,
+                    ),
+                    //点赞数量
+                    SizedBox(
+                      child: Text(
+                        "24",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                transform: Matrix4.translationValues(0.0, -5, 0.0),
+                padding: const EdgeInsets.only(left: 10),
+                //评论按钮
+                child: IconButton(
+                  icon: const Icon(
+                    IconData(
+                      0xe60a,
+                      fontFamily: "MyIcons",
+                    ),
+                    color: Color.fromARGB(255, 231, 62, 50),
+                    size: 20,
+                  ),
+                  onPressed: () {},
+                ),
+              ),
+              Container(
+                transform: Matrix4.translationValues(-10, 0.0, 0.0),
+                child: Column(
+                  children: const [
+                    SizedBox(
+                      height: 8,
+                    ),
+                    SizedBox(
+                      //评论数量
+                      child: Text(
+                        "23",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        )
+      ]),
+    );
+  }
+
+  //展示帖子
+  Widget _postShow(context) {
+    return SizedBox(
+      width: 335,
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            width: 335,
+            height: 55,
+            //每个帖子的导航栏
+            child: _contextNavBar(context),
+          ),
+          _swiperPic(context),
+          const SizedBox(
+            height: 10,
+          ),
+          _textContext(context),
+          _likeBtn(context),
+          const SizedBox(
+            height: 15,
+          )
         ],
       ),
     );

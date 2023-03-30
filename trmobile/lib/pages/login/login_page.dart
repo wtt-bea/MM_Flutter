@@ -50,51 +50,36 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(
                 height: 20,
               ),
-              slideShow(),
+              _slideShow(),
               const SizedBox(
                 height: 10,
               ),
-              accountInput(context),
+              _accountInput(context),
               const SizedBox(
                 height: 10,
               ),
-              pwdInput(context),
+              _pwdInput(context),
               const SizedBox(
                 height: 40,
               ),
-              agreeBox(context),
+              _agreeBox(context),
               const SizedBox(
                 height: 10,
               ),
-              loginBtn(context),
+              _loginBtn(context),
               const SizedBox(
                 height: 50,
               ),
-              regist(),
+              _regist(),
             ],
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        // When the user presses the button, show an alert dialog containing
-        // the text that the user has entered into the text field.
-        onPressed: () {
-          showDialog(
-            context: context,
-            builder: (context) {
-              return AlertDialog(
-                // Retrieve the text the that user has entered by using the
-                // TextEditingController.
-                content: Text(_pwd),
-              );
-            },
-          );
-        },
-      ),
     );
   }
 
-  Widget slideShow() {
+//登录滑动图
+  Widget _slideShow() {
     return SizedBox(
       width: double.infinity,
       child: AspectRatio(
@@ -127,7 +112,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget accountInput(context) {
+//账号输入框
+  Widget _accountInput(context) {
     return SizedBox(
       width: 280,
       height: 40,
@@ -158,7 +144,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget pwdInput(context) {
+//密码输入框
+  Widget _pwdInput(context) {
     return SizedBox(
       width: 280,
       height: 40,
@@ -201,7 +188,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget regist() {
+//注册按钮
+  Widget _regist() {
     return Text.rich(
       TextSpan(
           text: '没有账号?',
@@ -225,7 +213,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget agreeBox(context) {
+//登录须知
+  Widget _agreeBox(context) {
     // return const Center();
     return Text.rich(
       TextSpan(
@@ -262,7 +251,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget loginBtn(context) {
+//登录按钮
+  Widget _loginBtn(context) {
     return SizedBox(
       width: 280,
       height: 40,

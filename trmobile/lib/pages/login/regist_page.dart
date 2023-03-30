@@ -61,19 +61,19 @@ class _RegistPageState extends State<RegistPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 50),
-                    slogin(),
+                    _slogin(),
                     const SizedBox(height: 20),
-                    accountInput(),
+                    _accountInput(),
                     const SizedBox(height: 10),
-                    pwdInput(context),
+                    _pwdInput(context),
                     const SizedBox(height: 10),
-                    pwdreInput(context),
+                    _pwdreInput(context),
                     const SizedBox(height: 10),
-                    nameInput(context),
+                    _nameInput(context),
                     const SizedBox(height: 10),
-                    planetDropdown(context),
+                    _planetDropdown(context),
                     const SizedBox(height: 50),
-                    loginBtn(context),
+                    _loginBtn(context),
                   ],
                 ),
               ),
@@ -81,7 +81,7 @@ class _RegistPageState extends State<RegistPage> {
             SizedBox(
               width: 300,
               height: 300,
-              child: slideShow(),
+              child: _slideShow(),
             ),
           ],
         ),
@@ -89,7 +89,8 @@ class _RegistPageState extends State<RegistPage> {
     );
   }
 
-  Widget slideShow() {
+  //滑动图片
+  Widget _slideShow() {
     return SizedBox(
       width: double.infinity,
       child: AspectRatio(
@@ -122,13 +123,15 @@ class _RegistPageState extends State<RegistPage> {
     );
   }
 
-  Widget slogin() {
+  //Slogin
+  Widget _slogin() {
     return const Text.rich(TextSpan(
         text: "Welcom to MM Universe!",
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)));
   }
 
-  Widget accountInput() {
+  //账号输入框
+  Widget _accountInput() {
     return SizedBox(
         width: 350,
         height: 40,
@@ -180,7 +183,8 @@ class _RegistPageState extends State<RegistPage> {
         ));
   }
 
-  Widget pwdInput(context) {
+  //密码输入框
+  Widget _pwdInput(context) {
     return SizedBox(
         width: 350,
         height: 40,
@@ -248,7 +252,8 @@ class _RegistPageState extends State<RegistPage> {
         ));
   }
 
-  Widget pwdreInput(context) {
+  //确认密码
+  Widget _pwdreInput(context) {
     return SizedBox(
         width: 350,
         height: 40,
@@ -316,7 +321,8 @@ class _RegistPageState extends State<RegistPage> {
         ));
   }
 
-  Widget nameInput(context) {
+  //姓名输入框
+  Widget _nameInput(context) {
     return SizedBox(
         width: 350,
         height: 40,
@@ -362,7 +368,8 @@ class _RegistPageState extends State<RegistPage> {
         ));
   }
 
-  Widget planetDropdown(context) {
+  //新球选择
+  Widget _planetDropdown(context) {
     return SizedBox(
       width: 350,
       height: 40,
@@ -407,7 +414,8 @@ class _RegistPageState extends State<RegistPage> {
     );
   }
 
-  Widget loginBtn(context) {
+  //登录按钮
+  Widget _loginBtn(context) {
     return SizedBox(
         width: 250,
         height: 45,
@@ -627,5 +635,10 @@ class _RegistPageState extends State<RegistPage> {
                 ],
               ),
             )));
+  }
+
+  //TODO设置头像
+  Widget _avatarChose(context) {
+    return Center();
   }
 }
