@@ -7,6 +7,7 @@ class User {
   String? planet; // 星球
   String? address; // 用户地址
   String? age; //用户年龄
+  String? avatar; //用户头像
 
   User(
       {this.account,
@@ -14,7 +15,8 @@ class User {
       this.name,
       this.planet,
       this.address,
-      this.age});
+      this.age,
+      this.avatar});
 
   User.fromJson(dynamic json) {
     account = json["account"];
@@ -23,6 +25,7 @@ class User {
     planet = json["planet"];
     address = json["address"];
     age = json["age"];
+    avatar = json["avatar"];
   }
 
   Map<String, dynamic> toJson() {
@@ -33,11 +36,12 @@ class User {
     map["planet"] = planet;
     map["address"] = address;
     map["age"] = age;
+    map["avatar"] = avatar;
     return map;
   }
 
   @override
   String toString() {
-    return 'User{account: $account, password: $password, name: $name, planet: $planet, address: $address, age: $age}';
+    return 'User{account: $account, password: $password, name: $name, planet: $planet, address: $address, age: $age, avatar: $avatar}';
   }
 }

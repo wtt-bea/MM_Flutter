@@ -5,6 +5,9 @@ import '../../model/CommonResult.dart';
 import '../../model/Constant.dart';
 import '../../controller/MMApi.dart';
 import '../../pages/login/login_page.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
+import 'dart:io';
 
 class RegistPage extends StatefulWidget {
   const RegistPage({super.key});
@@ -24,6 +27,9 @@ class _RegistPageState extends State<RegistPage> {
   Color _eyeColor = Colors.grey;
   Color _eyereColor = Colors.grey;
   late String _pwd, _pwdre, _name, _account;
+
+  final picker = ImagePicker();
+  XFile? _imageFile;
 
   List imageList = [
     'lib/assets/images/info.png',
@@ -49,7 +55,7 @@ class _RegistPageState extends State<RegistPage> {
           children: [
             Container(
               width: 380,
-              height: 480,
+              height: 600,
               decoration: const BoxDecoration(
                 color: Colors.white,
                 borderRadius:
@@ -72,17 +78,19 @@ class _RegistPageState extends State<RegistPage> {
                     _nameInput(context),
                     const SizedBox(height: 10),
                     _planetDropdown(context),
+                    const SizedBox(height: 20),
+                    _avatarChose(context),
                     const SizedBox(height: 50),
                     _loginBtn(context),
                   ],
                 ),
               ),
             ),
-            SizedBox(
-              width: 300,
-              height: 300,
-              child: _slideShow(),
-            ),
+            // SizedBox(
+            //   width: 300,
+            //   height: 300,
+            //   child: _slideShow(),
+            // ),
           ],
         ),
       ),
@@ -368,7 +376,7 @@ class _RegistPageState extends State<RegistPage> {
         ));
   }
 
-  //新球选择
+  //星球选择
   Widget _planetDropdown(context) {
     return SizedBox(
       width: 350,
@@ -639,6 +647,79 @@ class _RegistPageState extends State<RegistPage> {
 
   //TODO设置头像
   Widget _avatarChose(context) {
-    return Center();
+    return Center(
+      child: Row(
+        children: [
+          const SizedBox(
+            width: 40,
+          ),
+          const Text(
+            "设置头像",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.black,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          // SizedBox(
+          //   width: 100,
+          //   height: 100,
+          //   child: _imageFile == null
+          //       ? Image.network("https://www.itying.com/images/flutter/2.png",
+          //           fit: BoxFit.fill)
+          //       : Image.file(File(_imageFile!.path), fit: BoxFit.fill),
+          // ),
+          TextButton(
+            onPressed: _openGallery,
+            child: Container(
+              height: 100,
+              width: 100,
+              decoration: const BoxDecoration(color: Colors.black12),
+              child: _imageFile == null
+                  ? Container(
+                      margin: const EdgeInsets.all(20),
+                      child: Column(children: const [
+                        Icon(
+                          Icons.add,
+                          color: Colors.black26,
+                          size: 40,
+                        ),
+                        Text(
+                          "点击选择",
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.black38,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        )
+                      ]),
+                    )
+                  : SizedBox(
+                      height: 100,
+                      width: 100,
+                      child:
+                          Image.file(File(_imageFile!.path), fit: BoxFit.fill),
+                    ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  _openGallery() async {
+    XFile? pickedFile = await picker.pickImage(
+        source: ImageSource.gallery, maxHeight: 600, maxWidth: 600);
+
+    if (pickedFile != null) {
+      print(pickedFile.path);
+      print(File(pickedFile.path));
+      setState(() {
+        _imageFile = pickedFile;
+      });
+    }
   }
 }

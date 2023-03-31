@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       title: '漫漫',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: CommunityPage(),
+      home: RegistPage(),
     );
   }
 }
