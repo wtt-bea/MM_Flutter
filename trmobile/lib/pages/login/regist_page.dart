@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_swiper/flutter_swiper.dart';
-import '../../model/CommonResult.dart';
-import '../../model/Constant.dart';
-import '../../controller/MMApi.dart';
+import 'package:trmobile/pages/community/community_page.dart';
 import '../../pages/login/login_page.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:dio/dio.dart';
 import 'dart:io';
+import '../../net/TtApi.dart';
+import '../../net/NetRequester.dart';
+import 'dart:typed_data';
+import 'package:dio/dio.dart';
 
 class RegistPage extends StatefulWidget {
   const RegistPage({super.key});
@@ -22,11 +23,9 @@ class _RegistPageState extends State<RegistPage> {
   bool _isObscure = true;
   bool _isreObscure = true;
 
-  final MMApi api = MMApi();
-
   Color _eyeColor = Colors.grey;
   Color _eyereColor = Colors.grey;
-  late String _pwd, _pwdre, _name, _account;
+  late String _account, _pwd, _pwdre, _name;
 
   final picker = ImagePicker();
   XFile? _imageFile;
@@ -576,60 +575,71 @@ class _RegistPageState extends State<RegistPage> {
                       );
                     });
               } else {
-                // 向服务端发送请求
-                CommonResult result =
-                    await api.insertUser(_account, _pwd, _name, _planet);
-                // 错误提示信息
-                String errmsg = "";
-                if (result.code == 200) {
-                  errmsg = "注册成功，跳转到登录界面";
-                } else if (result.code == 401) {
-                  errmsg = "注册失败，该账号已被注册";
+                FormData formData = FormData.fromMap({
+                  "account": _account,
+                  "password": _pwd,
+                  "name": _name,
+                  "planet": _planet,
+                  "file": await MultipartFile.fromFile(_imageFile!.path,
+                      filename: "$_account.png")
+                });
+                var dio = Dio();
+                var result = await dio.post(
+                    "http://172.20.10.5:80/user/register",
+                    data: formData);
+                print(result);
+                if (result.data['message'] == "true") {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CommunityPage(
+                                account: _account,
+                              )));
                 } else {
-                  errmsg = "注册失败，信息有误";
-                }
-                showDialog(
-                    context: this.context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title: const Text(
-                          "消息",
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(15))),
-                        content: Text("${errmsg}"),
-                        actions: <Widget>[
-                          OutlinedButton(
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                            style: OutlinedButton.styleFrom(
-                              side: const BorderSide(
-                                  width: 1.0, color: Colors.black),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
+                  showDialog(
+                      context: this.context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: const Text(
+                            "注册提醒",
+                            style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w400),
+                          ),
+                          shape: const RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15))),
+                          content: const Text(
+                            "该账号已被注册",
+                            style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w300),
+                          ),
+                          actions: <Widget>[
+                            OutlinedButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              style: OutlinedButton.styleFrom(
+                                side: const BorderSide(
+                                    width: 1.0, color: Colors.black),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
                               ),
-                            ),
-                            child: const Text(
-                              "确 认",
-                              style: TextStyle(
-                                  fontSize: 15,
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w300),
-                            ),
-                          )
-                        ],
-                      );
-                    });
-                if (result.code == 200) {
-                  // 跳转到登录界面
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()));
+                              child: const Text(
+                                "确 认",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                            )
+                          ],
+                        );
+                      });
                 }
               }
             },
@@ -661,17 +671,9 @@ class _RegistPageState extends State<RegistPage> {
               fontWeight: FontWeight.w300,
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 10,
           ),
-          // SizedBox(
-          //   width: 100,
-          //   height: 100,
-          //   child: _imageFile == null
-          //       ? Image.network("https://www.itying.com/images/flutter/2.png",
-          //           fit: BoxFit.fill)
-          //       : Image.file(File(_imageFile!.path), fit: BoxFit.fill),
-          // ),
           TextButton(
             onPressed: _openGallery,
             child: Container(
@@ -710,13 +712,11 @@ class _RegistPageState extends State<RegistPage> {
     );
   }
 
-  _openGallery() async {
+  Future _openGallery() async {
     XFile? pickedFile = await picker.pickImage(
         source: ImageSource.gallery, maxHeight: 600, maxWidth: 600);
 
     if (pickedFile != null) {
-      print(pickedFile.path);
-      print(File(pickedFile.path));
       setState(() {
         _imageFile = pickedFile;
       });

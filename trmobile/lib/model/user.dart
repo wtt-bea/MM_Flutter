@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class User {
   String? account; // 用户账号
   String? password; // 用户密码
@@ -17,6 +15,8 @@ class User {
       this.address,
       this.age,
       this.avatar});
+
+  User.none();
 
   User.fromJson(dynamic json) {
     account = json["account"];

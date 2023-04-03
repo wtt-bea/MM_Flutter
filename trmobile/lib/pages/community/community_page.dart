@@ -7,7 +7,11 @@ import 'package:flutter/gestures.dart';
 import "detial_page.dart";
 
 class CommunityPage extends StatefulWidget {
-  const CommunityPage({super.key});
+  final account;
+  const CommunityPage({
+    super.key,
+    required this.account,
+  });
 
   @override
   State<CommunityPage> createState() => _CommunityPageState();
@@ -20,18 +24,16 @@ class _CommunityPageState extends State<CommunityPage> {
   static const loadingTag = "##loading##"; //表尾标记
   final _words = <String>[loadingTag];
 
-  bool flag_1 = false;
-  bool flag_2 = true;
-  bool flag_3 = true;
-  bool flag_4 = true;
-  bool flag_5 = true;
-
   List imageList = [
     'lib/assets/images/A.png',
     'lib/assets/images/B.png',
     'lib/assets/images/C.png'
   ];
-
+  bool flag_1 = false;
+  bool flag_2 = true;
+  bool flag_3 = true;
+  bool flag_4 = true;
+  bool flag_5 = true;
   @override
   void initState() {
     super.initState();
@@ -561,7 +563,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                 height: 10,
                               ),
                               //发帖人昵称
-                              Text("我的名字",
+                              Text("你的名字",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Color.fromARGB(230, 48, 48, 48),
@@ -970,8 +972,10 @@ class _CommunityPageState extends State<CommunityPage> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              DetialPage(recipeImageList: imageList)));
+                          builder: (context) => DetialPage(
+                                recipeImageList: imageList,
+                                account: widget.account,
+                              )));
                 },
             ),
           ),

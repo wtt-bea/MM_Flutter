@@ -6,10 +6,9 @@ import 'package:english_words/english_words.dart';
 
 class DetialPage extends StatefulWidget {
   final List recipeImageList; //传来的图片
-  const DetialPage({
-    super.key,
-    required this.recipeImageList,
-  });
+  final account;
+  const DetialPage(
+      {super.key, required this.recipeImageList, required this.account});
 
   @override
   State<DetialPage> createState() => _DetialPageState();
@@ -327,13 +326,13 @@ class _DetialPageState extends State<DetialPage> {
         Row(
           children: [
             const SizedBox(width: 25),
-            const SizedBox(
+            SizedBox(
               //用户头像
               height: 30,
               width: 30,
               child: CircleAvatar(
-                backgroundImage:
-                    NetworkImage("https://www.itying.com/images/flutter/3.png"),
+                backgroundImage: NetworkImage(
+                    "http://172.20.10.5/images/${widget.account}.png"),
               ),
             ),
             const SizedBox(

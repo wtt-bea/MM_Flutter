@@ -4,9 +4,12 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter/gestures.dart';
 import 'privacypolicy_page.dart';
 import 'useragreement_page.dart';
-import 'regist_page.dart';
-import '../../model/CommonResult.dart';
-import '../../controller/MMApi.dart';
+import '../community/community_page.dart';
+import "regist_page.dart";
+// import '../../controller/MMApi.dart';
+import '../../net/TtApi.dart';
+import '../../net/NetRequester.dart';
+import '../../model/User.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,8 +22,6 @@ class _LoginPageState extends State<LoginPage> {
   final GlobalKey _formKey = GlobalKey<FormState>();
   late String _account = "";
   late String _pwd = "";
-
-  final MMApi api = MMApi();
 
   bool _isObscure = true;
   Color _eyeColor = Colors.grey;
@@ -259,10 +260,16 @@ class _LoginPageState extends State<LoginPage> {
       child: OutlinedButton(
         onPressed: () async {
           (_formKey.currentState as FormState).save();
-          CommonResult result = await api.queryUser(_account, _pwd);
-          if (result.message == "true") {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const RegistPage()));
+          var result = await NetRequester.request(Apis.login(_account, _pwd));
+          if (result["message"] == "true") {
+            User user = User.fromJson(result["data"]);
+            // print(user.account);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => CommunityPage(
+                          account: user.account,
+                        )));
           } else {
             showDialog(
                 context: this.context,

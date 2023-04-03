@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import "../model/user.dart";
+import '../model/User.dart';
 import '../model/CommonResult.dart';
 
 class MMApi {
