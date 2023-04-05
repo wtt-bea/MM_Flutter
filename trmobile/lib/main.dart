@@ -6,6 +6,7 @@ import 'pages/login/useragreement_page.dart';
 import 'pages/community/community_page.dart';
 import 'package:provider/provider.dart';
 import 'model/User.dart';
+import 'package:get/get.dart';
 
 void main() => runApp(const MyApp());
 
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: '漫漫',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.grey),

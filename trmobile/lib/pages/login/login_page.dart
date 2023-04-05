@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:flutter/gestures.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'privacypolicy_page.dart';
 import 'useragreement_page.dart';
 import '../community/community_page.dart';
@@ -261,15 +263,21 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () async {
           (_formKey.currentState as FormState).save();
           var result = await NetRequester.request(Apis.login(_account, _pwd));
+          print(result);
           if (result["message"] == "true") {
-            User user = User.fromJson(result["data"]);
-            // print(user.account);
+            final user = User.fromJson(result["data"]);
+            print(user);
+            Get.snackbar("成功登陆", "欢迎回家${user.name}",
+                backgroundColor: Color.fromARGB(200, 255, 255, 255),
+                duration: const Duration(seconds: 4));
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => CommunityPage(
-                          account: user.account,
-                        )));
+              context,
+              MaterialPageRoute(
+                builder: (context) => CommunityPage(
+                  account: user.account,
+                ),
+              ),
+            );
           } else {
             showDialog(
                 context: this.context,

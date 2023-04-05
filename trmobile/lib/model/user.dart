@@ -16,8 +16,6 @@ class User {
       this.age,
       this.avatar});
 
-  User.none();
-
   User.fromJson(dynamic json) {
     account = json["account"];
     password = json["password"];

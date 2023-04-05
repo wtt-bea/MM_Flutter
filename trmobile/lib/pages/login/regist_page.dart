@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:trmobile/pages/community/community_page.dart';
-import '../../pages/login/login_page.dart';
+// import '../../pages/login/login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import '../../net/TtApi.dart';
-import '../../net/NetRequester.dart';
-import 'dart:typed_data';
+// import '../../net/TtApi.dart';
+// import '../../net/NetRequester.dart';
+// import 'dart:typed_data';
 import 'package:dio/dio.dart';
 
 class RegistPage extends StatefulWidget {
@@ -589,6 +591,9 @@ class _RegistPageState extends State<RegistPage> {
                     data: formData);
                 print(result);
                 if (result.data['message'] == "true") {
+                  Get.snackbar("成功登陆", "欢迎回家$_name",
+                      backgroundColor: Color.fromARGB(200, 255, 255, 255),
+                      duration: const Duration(seconds: 4));
                   Navigator.push(
                       context,
                       MaterialPageRoute(

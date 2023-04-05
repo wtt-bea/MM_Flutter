@@ -4,11 +4,15 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:io';
 import 'package:flutter/gestures.dart';
+import 'package:trmobile/pages/community/post.dart';
 import "detial_page.dart";
+import '../../net/TtApi.dart';
+import '../../net/NetRequester.dart';
+import '../../model/User.dart';
 
 class CommunityPage extends StatefulWidget {
-  final account;
-  const CommunityPage({
+  late final account;
+  CommunityPage({
     super.key,
     required this.account,
   });
@@ -22,21 +26,20 @@ class _CommunityPageState extends State<CommunityPage> {
   final Color _whiteColor = Colors.white;
   final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
   static const loadingTag = "##loading##"; //表尾标记
-  final _words = <String>[loadingTag];
+  List _words = <dynamic>[];
 
   List imageList = [
     'lib/assets/images/A.png',
     'lib/assets/images/B.png',
     'lib/assets/images/C.png'
   ];
-  bool flag_1 = false;
-  bool flag_2 = true;
-  bool flag_3 = true;
-  bool flag_4 = true;
-  bool flag_5 = true;
+
+  String _planet = "焦虑星";
+
   @override
-  void initState() {
+  initState() {
     super.initState();
+    _getPlanet();
     _retrieveData();
   }
 
@@ -63,7 +66,7 @@ class _CommunityPageState extends State<CommunityPage> {
         child: Column(
           children: [
             const SizedBox(height: 35),
-            _topNavBar(context),
+            _topNavBar(),
             const SizedBox(height: 13),
             _contextShow(context),
             const SizedBox(height: 17),
@@ -75,7 +78,29 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   //星球导航栏
-  Widget _topNavBar(context) {
+  Widget _topNavBar() {
+    bool flag_1 = true;
+    bool flag_2 = true;
+    bool flag_3 = true;
+    bool flag_4 = true;
+    bool flag_5 = true;
+    switch (_planet) {
+      case "焦虑星":
+        flag_1 = false;
+        break;
+      case "倦怠星":
+        flag_2 = false;
+        break;
+      case "失落星":
+        flag_3 = false;
+        break;
+      case "不开星":
+        flag_4 = false;
+        break;
+      case "痛苦星":
+        flag_5 = false;
+        break;
+    }
     return Container(
       alignment: Alignment.center,
       width: 335,
@@ -136,6 +161,10 @@ class _CommunityPageState extends State<CommunityPage> {
                         flag_3 = true;
                         flag_4 = true;
                         flag_5 = true;
+                        setState(() {
+                          _planet = "焦虑星";
+                          _retrieveData();
+                        });
                       }
                     },
                   ),
@@ -179,6 +208,10 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = true;
                           flag_4 = true;
                           flag_5 = true;
+                          setState(() {
+                            _planet = "倦怠星";
+                            _retrieveData();
+                          });
                         });
                       }
                     },
@@ -223,6 +256,10 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = false;
                           flag_4 = true;
                           flag_5 = true;
+                          setState(() {
+                            _planet = "失落星";
+                            _retrieveData();
+                          });
                         });
                       }
                     },
@@ -267,6 +304,10 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = true;
                           flag_4 = false;
                           flag_5 = true;
+                          setState(() {
+                            _planet = "不开星";
+                            _retrieveData();
+                          });
                         });
                       }
                     },
@@ -311,6 +352,10 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = true;
                           flag_4 = true;
                           flag_5 = false;
+                          setState(() {
+                            _planet = "痛苦星";
+                            _retrieveData();
+                          });
                         });
                       }
                     },
@@ -455,59 +500,63 @@ class _CommunityPageState extends State<CommunityPage> {
           children: [
             const SizedBox(height: 10),
             //搜索bar
-            _searchBar(context),
+            // _searchBar(context),
             SizedBox(
-              height: 530,
+              height: 575,
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
                 child: ListView.separated(
-                  itemCount: _words.length,
+                  itemCount: _words.length + 1,
                   itemBuilder: (context, index) {
-                    //如果到了表尾
-                    if (_words[index] == loadingTag) {
+                    if (_words == <dynamic>[]) {
+                      return Container(
+                        padding: const EdgeInsets.all(16.0),
+                        alignment: Alignment.center,
+                        child: const SizedBox(
+                          width: 24.0,
+                          height: 24.0,
+                          child: CircularProgressIndicator(strokeWidth: 2.0),
+                        ),
+                      );
+                    } else if (index == _words.length) {
                       //不足100条，继续获取数据
-                      if (_words.length - 1 < 100) {
-                        //获取数据
-                        _retrieveData();
-                        //加载时显示loading
-                        return Container(
-                          padding: const EdgeInsets.all(16.0),
-                          alignment: Alignment.center,
-                          child: const SizedBox(
-                            width: 24.0,
-                            height: 24.0,
-                            child: CircularProgressIndicator(strokeWidth: 2.0),
-                          ),
-                        );
-                      } else {
-                        //加载完成
-                        return Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: 300,
-                                height: 1,
-                                decoration: const BoxDecoration(
-                                    color: Color.fromARGB(13, 0, 0, 0)),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                              const Text(
-                                "- The End -",
-                                style: TextStyle(
-                                    color: Colors.black26, fontSize: 11),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                      //加载完成
+                      // return Container(
+                      //   alignment: Alignment.center,
+                      //   padding: const EdgeInsets.all(16.0),
+                      //   child: Column(
+                      //     children: [
+                      //       Container(
+                      //         width: 300,
+                      //         height: 1,
+                      //         decoration: const BoxDecoration(
+                      //             color: Color.fromARGB(13, 0, 0, 0)),
+                      //       ),
+                      //       const SizedBox(
+                      //         height: 30,
+                      //       ),
+                      //       const Text(
+                      //         "- The End -",
+                      //         style: TextStyle(
+                      //             color: Colors.black26, fontSize: 11),
+                      //       ),
+                      //     ],
+                      //   ),
+                      // );
+                      return Container(
+                        padding: const EdgeInsets.all(16.0),
+                        alignment: Alignment.center,
+                        child: const SizedBox(
+                          width: 24.0,
+                          height: 24.0,
+                          child: CircularProgressIndicator(strokeWidth: 2.0),
+                        ),
+                      );
+                    } else {
+                      return _postShow(index);
                     }
                     //社区内容现实列表
-                    return _postShow(context);
                   },
                   separatorBuilder: (context, index) =>
                       const Divider(height: .0),
@@ -521,19 +570,20 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   //每个帖子的导航栏
-  Widget _contextNavBar(context) {
+  Widget _contextNavBar(index) {
+    var time = _words[index]["date"].substring(0, 16);
     return Row(
       children: [
         const SizedBox(
           width: 10,
         ),
-        const SizedBox(
+        SizedBox(
           //发帖人头像
           height: 45,
           width: 45,
           child: CircleAvatar(
-            backgroundImage:
-                NetworkImage("https://www.itying.com/images/flutter/2.png"),
+            backgroundImage: NetworkImage(
+                "http://172.20.10.5/images/${_words[index]["account"]}.png"),
           ),
         ),
         SizedBox(
@@ -558,12 +608,12 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                         SizedBox(
                           child: Column(
-                            children: const [
+                            children: [
                               SizedBox(
                                 height: 10,
                               ),
                               //发帖人昵称
-                              Text("你的名字",
+                              Text("${_words[index]["name"]}",
                                   style: TextStyle(
                                     fontWeight: FontWeight.w500,
                                     color: Color.fromARGB(230, 48, 48, 48),
@@ -574,55 +624,26 @@ class _CommunityPageState extends State<CommunityPage> {
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 25,
-                    width: 44,
-                    child: TextButton(
-                      style: ButtonStyle(
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.all(0),
-                        ),
-                        overlayColor:
-                            MaterialStateProperty.all(Colors.transparent),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.black),
-                      ),
-                      //关注按钮
-                      onPressed: () {},
-                      child: const Text(
-                        "关注",
-                        style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white),
-                      ),
-                    ),
-                  )
                 ]),
               ),
               SizedBox(
                 height: 13,
                 width: 270,
                 child: Row(
-                  children: const [
-                    SizedBox(
+                  children: [
+                    const SizedBox(
                       width: 10,
                     ),
                     SizedBox(
                       height: 13,
-                      width: 100,
+                      width: 110,
                       //帖子发布时间
                       child: Text(
-                        "2022/11/22  23:09",
+                        "$time",
                         style: TextStyle(fontSize: 11, color: Colors.grey),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 10,
                     ),
                   ],
@@ -635,19 +656,26 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  void _retrieveData() {
-    Future.delayed(const Duration(seconds: 2)).then((e) {
-      if (mounted) {
-        setState(() {
-          //重新构建列表
-          _words.insertAll(
-            _words.length - 1,
-            //每次生成20个单词
-            generateWordPairs().take(20).map((e) => e.asPascalCase).toList(),
-          );
-        });
-      }
-    });
+  void _retrieveData() async {
+    var result;
+    Future.delayed(
+        Duration(seconds: 1),
+        () async => {
+              result = await NetRequester.request(Apis.receive(_planet)),
+            }).then((value) => setState(() {
+          _words = result["data"];
+          print(_words);
+        }));
+  }
+
+  void _getPlanet() async {
+    String _account = widget.account;
+    var result = await NetRequester.request(Apis.planet(_account));
+    if (mounted) {
+      setState(() {
+        _planet = result["data"];
+      });
+    }
   }
 
   //底部导航栏
@@ -749,7 +777,12 @@ class _CommunityPageState extends State<CommunityPage> {
               ),
               //文字编辑按钮
               onPressed: () {
-                showBottomSheet();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PostPage(
+                              account: widget.account,
+                            )));
               },
             ),
           ),
@@ -813,104 +846,6 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  //显示底部弹框的功能
-  void showBottomSheet() {
-    //用于在底部打开弹框的效果
-    showModalBottomSheet(
-        builder: (BuildContext context) {
-          //构建弹框中的内容
-          return buildBottomSheetWidget(context);
-        },
-        context: context);
-  }
-
-  //发帖
-  Widget buildBottomSheetWidget(BuildContext context) {
-    return SizedBox(
-      child: Column(
-        children: [
-          SizedBox(
-            child: Row(
-              children: [
-                const SizedBox(
-                  width: 10,
-                ),
-                SizedBox(
-                  height: 32,
-                  width: 55,
-                  child: TextButton(
-                    style: ButtonStyle(
-                      overlayColor: MaterialStateProperty.all(
-                          const Color.fromARGB(0, 157, 45, 45)),
-                      shape: MaterialStateProperty.all(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(7),
-                        ),
-                      ),
-                      backgroundColor: MaterialStateProperty.all(
-                          const Color.fromARGB(255, 253, 183, 200)),
-                    ),
-                    //发布按钮
-                    onPressed: () {},
-                    child: const Text(
-                      "发布",
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 245),
-                SizedBox(
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.black54,
-                    ),
-                    //关闭按钮
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 150,
-            width: 340,
-            //文字输入框
-            child: TextField(
-              keyboardType: TextInputType.multiline,
-              maxLines: 6,
-              minLines: 1,
-              decoration: InputDecoration(
-                hintText: '今天遇到什么开心的事情了吗....',
-                hintStyle: TextStyle(fontSize: 14, color: Colors.black26),
-                filled: true,
-                fillColor: Colors.transparent,
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                isDense: true,
-                border: InputBorder.none,
-              ),
-              style: TextStyle(
-                  color: Color.fromARGB(255, 67, 67, 67),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w300),
-            ),
-          ),
-          //TODO 添加图片
-          Container(
-            decoration: BoxDecoration(color: Color.fromARGB(255, 29, 28, 26)),
-            height: 232,
-          ),
-        ],
-      ),
-    );
-  }
-
   //每个帖子的图片
   Widget _swiperPic(context) {
     return SizedBox(
@@ -947,7 +882,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   //每个帖子的文字内容
-  Widget _textContext(context) {
+  Widget _textContext(index) {
     return SizedBox(
       width: 335,
       height: 40,
@@ -961,7 +896,7 @@ class _CommunityPageState extends State<CommunityPage> {
           height: 20,
           child: Text.rich(
             TextSpan(
-              text: '''轻轻的我走了正正如我轻轻的来如我轻轻的来正如我轻轻的来正如我轻轻的来正如我轻轻的来jicdji''',
+              text: '''${_words[index]["context"]}''',
               style: const TextStyle(
                 fontWeight: FontWeight.w300,
                 fontSize: 13,
@@ -985,7 +920,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   //点赞和评论
-  Widget _likeBtn(context) {
+  Widget _likeBtn(index) {
     return SizedBox(
       width: 335,
       child: Row(children: [
@@ -1013,15 +948,15 @@ class _CommunityPageState extends State<CommunityPage> {
               Container(
                 padding: const EdgeInsets.only(left: 5),
                 child: Column(
-                  children: const [
-                    SizedBox(
+                  children: [
+                    const SizedBox(
                       height: 8,
                     ),
                     //点赞数量
                     SizedBox(
                       child: Text(
-                        "24",
-                        style: TextStyle(
+                        "${_words[index]["like_number"]}",
+                        style: const TextStyle(
                             fontWeight: FontWeight.w300, fontSize: 12),
                       ),
                     ),
@@ -1047,15 +982,15 @@ class _CommunityPageState extends State<CommunityPage> {
               Container(
                 transform: Matrix4.translationValues(-10, 0.0, 0.0),
                 child: Column(
-                  children: const [
-                    SizedBox(
+                  children: [
+                    const SizedBox(
                       height: 8,
                     ),
                     SizedBox(
                       //评论数量
                       child: Text(
-                        "23",
-                        style: TextStyle(
+                        "${_words[index]["comment_number"]}",
+                        style: const TextStyle(
                             fontWeight: FontWeight.w300, fontSize: 12),
                       ),
                     ),
@@ -1070,7 +1005,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   //展示帖子
-  Widget _postShow(context) {
+  Widget _postShow(index) {
     return SizedBox(
       width: 335,
       child: Column(
@@ -1082,14 +1017,14 @@ class _CommunityPageState extends State<CommunityPage> {
             width: 335,
             height: 55,
             //每个帖子的导航栏
-            child: _contextNavBar(context),
+            child: _contextNavBar(index),
           ),
-          _swiperPic(context),
+          _swiperPic(index),
           const SizedBox(
             height: 10,
           ),
-          _textContext(context),
-          _likeBtn(context),
+          _textContext(index),
+          _likeBtn(index),
           const SizedBox(
             height: 15,
           )
