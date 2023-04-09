@@ -9,6 +9,7 @@ import "detial_page.dart";
 import '../../net/TtApi.dart';
 import '../../net/NetRequester.dart';
 import '../../model/User.dart';
+import 'dart:async';
 
 class CommunityPage extends StatefulWidget {
   late final account;
@@ -27,12 +28,16 @@ class _CommunityPageState extends State<CommunityPage> {
   final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
   static const loadingTag = "##loading##"; //表尾标记
   List _words = <dynamic>[];
+  bool _isLike = false;
 
-  List imageList = [
-    'lib/assets/images/A.png',
-    'lib/assets/images/B.png',
-    'lib/assets/images/C.png'
-  ];
+  // List imageList = [
+  //   'lib/assets/images/A.png',
+  //   'lib/assets/images/B.png',
+  //   'lib/assets/images/C.png'
+  // ];
+  // http://172.20.10.5/images/
+
+  Map imageList = {};
 
   String _planet = "焦虑星";
 
@@ -509,7 +514,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 child: ListView.separated(
                   itemCount: _words.length + 1,
                   itemBuilder: (context, index) {
-                    if (_words == <dynamic>[]) {
+                    if (_words == null) {
                       return Container(
                         padding: const EdgeInsets.all(16.0),
                         alignment: Alignment.center,
@@ -520,40 +525,26 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                       );
                     } else if (index == _words.length) {
-                      //不足100条，继续获取数据
-                      //加载完成
-                      // return Container(
-                      //   alignment: Alignment.center,
-                      //   padding: const EdgeInsets.all(16.0),
-                      //   child: Column(
-                      //     children: [
-                      //       Container(
-                      //         width: 300,
-                      //         height: 1,
-                      //         decoration: const BoxDecoration(
-                      //             color: Color.fromARGB(13, 0, 0, 0)),
-                      //       ),
-                      //       const SizedBox(
-                      //         height: 30,
-                      //       ),
-                      //       const Text(
-                      //         "- The End -",
-                      //         style: TextStyle(
-                      //             color: Colors.black26, fontSize: 11),
-                      //       ),
-                      //     ],
-                      //   ),
-                      // );
+                      // 不足100条，继续获取数据
+                      // 加载完成
                       return Container(
-                        padding: const EdgeInsets.all(16.0),
                         alignment: Alignment.center,
-                        child: const SizedBox(
-                          width: 24.0,
-                          height: 24.0,
-                          child: CircularProgressIndicator(strokeWidth: 2.0),
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: const [
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              "- The End -",
+                              style: TextStyle(
+                                  color: Colors.black26, fontSize: 11),
+                            ),
+                          ],
                         ),
                       );
                     } else {
+                      print(index);
                       return _postShow(index);
                     }
                     //社区内容现实列表
@@ -657,15 +648,43 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   void _retrieveData() async {
-    var result;
+    var result1;
+    var result2;
     Future.delayed(
         Duration(seconds: 1),
         () async => {
-              result = await NetRequester.request(Apis.receive(_planet)),
-            }).then((value) => setState(() {
-          _words = result["data"];
-          print(_words);
-        }));
+              result1 = await NetRequester.request(Apis.receive(_planet)),
+              result2 = await NetRequester.request(Apis.queryImage()),
+            }).then((value) => {nn(result1, result2)});
+  }
+
+  void nn(result1, result2) {
+    var data1 = result1["data"];
+    var data2 = result2["data"];
+    Map newimageList = {};
+    for (int index = 0; index < data1.length; index++) {
+      List aList = [];
+      var flag = 0;
+      for (int i = 0; i < data2.length; i++) {
+        while ((i < data2.length) &&
+            (data1[index]["post_id"] == data2[i]["post_id"])) {
+          aList.add(data2[i]["url"]);
+          i++;
+          flag = 1;
+        }
+        if (flag == 1) {
+          break;
+        }
+      }
+      newimageList[data1[index]["post_id"]] = aList;
+      print(newimageList);
+    }
+    if (mounted) {
+      setState(() {
+        _words = result1["data"];
+        imageList = newimageList;
+      });
+    }
   }
 
   void _getPlanet() async {
@@ -677,6 +696,14 @@ class _CommunityPageState extends State<CommunityPage> {
       });
     }
   }
+
+  // void _getImage(index) async {
+  //   var result = await NetRequester.request(Apis.queryImage());
+  //   for (int i = 0; i < result["data"].length; i++) {
+  //     imageList.add(result["data"][i]["url"]);
+  //   }
+  //   print(imageList);
+  // }
 
   //底部导航栏
   Widget _bottomNav(context) {
@@ -847,7 +874,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   //每个帖子的图片
-  Widget _swiperPic(context) {
+  Widget _swiperPic(index) {
     return SizedBox(
       //图片设置为轮播图
       width: double.infinity,
@@ -855,15 +882,16 @@ class _CommunityPageState extends State<CommunityPage> {
         // 配置宽高比
         aspectRatio: 1 / 1,
         child: Swiper(
-          itemBuilder: (BuildContext context, int index) {
-            // 配置图片地址
-            return Image.asset(
-              imageList[index],
+          key: ValueKey(imageList[_words[index]["post_id"]].length),
+          // 配置图片数量
+          itemBuilder: (BuildContext context, int flag) {
+            return Image.network(
+              imageList[_words[index]["post_id"]][flag],
               fit: BoxFit.contain,
             );
+            // 配置图片地址
           },
-          // 配置图片数量
-          itemCount: imageList.length,
+          itemCount: imageList[_words[index]["post_id"]].length,
           // 底部分页器
           pagination: const SwiperPagination(
             builder: DotSwiperPaginationBuilder(
@@ -874,8 +902,6 @@ class _CommunityPageState extends State<CommunityPage> {
           ),
           // 无限循环
           loop: true,
-          // 自动轮播
-          // autoplay: true,
         ),
       ),
     );
@@ -910,6 +936,11 @@ class _CommunityPageState extends State<CommunityPage> {
                           builder: (context) => DetialPage(
                                 recipeImageList: imageList,
                                 account: widget.account,
+                                name: _words[index]["name"],
+                                post_id: _words[index]["post_id"],
+                                postaccount: _words[index]["account"],
+                                context: _words[index]["context"],
+                                time: _words[index]["date"].substring(0, 16),
                               )));
                 },
             ),
@@ -934,13 +965,15 @@ class _CommunityPageState extends State<CommunityPage> {
                 transform: Matrix4.translationValues(0.0, -5, 0.0),
                 //点赞按钮
                 child: IconButton(
-                  icon: const Icon(
-                    IconData(
+                  icon: Icon(
+                    const IconData(
                       0xe616,
                       fontFamily: "MyIcons",
                     ),
                     size: 20,
-                    color: Color.fromARGB(255, 231, 62, 50),
+                    color: _isLike
+                        ? Color.fromARGB(255, 231, 62, 50)
+                        : Color.fromARGB(255, 45, 42, 41),
                   ),
                   onPressed: () {},
                 ),
@@ -1019,12 +1052,13 @@ class _CommunityPageState extends State<CommunityPage> {
             //每个帖子的导航栏
             child: _contextNavBar(index),
           ),
+
           _swiperPic(index),
           const SizedBox(
             height: 10,
           ),
           _textContext(index),
-          _likeBtn(index),
+          // _likeBtn(index),
           const SizedBox(
             height: 15,
           )

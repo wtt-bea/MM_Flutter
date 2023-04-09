@@ -5,10 +5,22 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:english_words/english_words.dart';
 
 class DetialPage extends StatefulWidget {
-  final List recipeImageList; //传来的图片
+  Map recipeImageList = {}; //传来的图片
   final account;
-  const DetialPage(
-      {super.key, required this.recipeImageList, required this.account});
+  final postaccount;
+  final name;
+  final post_id;
+  final context;
+  final time;
+  DetialPage(
+      {super.key,
+      required this.recipeImageList,
+      required this.account,
+      required this.name,
+      required this.post_id,
+      required this.postaccount,
+      required this.context,
+      required this.time});
 
   @override
   State<DetialPage> createState() => _DetialPageState();
@@ -77,52 +89,52 @@ class _DetialPageState extends State<DetialPage> {
           const SizedBox(
             width: 10,
           ),
-          const SizedBox(
+          SizedBox(
             height: 40,
             width: 40,
             //发帖人头像
             child: CircleAvatar(
-              backgroundImage:
-                  NetworkImage("https://www.itying.com/images/flutter/2.png"),
+              backgroundImage: NetworkImage(
+                  "http://172.20.10.5/images/${widget.postaccount}.png"),
             ),
           ),
           const SizedBox(
             width: 10,
           ),
-          const SizedBox(
+          SizedBox(
             width: 210,
             //用户名
             child: Text(
-              "我的名字yia",
-              style: TextStyle(
+              "${widget.name}",
+              style: const TextStyle(
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w400),
             ),
           ),
-          SizedBox(
-            height: 25,
-            width: 50,
-            //关注按钮
-            child: OutlinedButton(
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.only(bottom: 2),
-                side: const BorderSide(
-                    width: 1.0, color: Color.fromARGB(255, 253, 183, 200)),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-              ),
-              onPressed: () {},
-              child: const Text(
-                "关注",
-                style: TextStyle(
-                    fontSize: 11,
-                    fontWeight: FontWeight.w500,
-                    color: Color.fromARGB(255, 253, 183, 200)),
-              ),
-            ),
-          )
+          // SizedBox(
+          //   height: 25,
+          //   width: 50,
+          //   //关注按钮
+          //   child: OutlinedButton(
+          //     style: OutlinedButton.styleFrom(
+          //       padding: const EdgeInsets.only(bottom: 2),
+          //       side: const BorderSide(
+          //           width: 1.0, color: Color.fromARGB(255, 253, 183, 200)),
+          //       shape: RoundedRectangleBorder(
+          //         borderRadius: BorderRadius.circular(15),
+          //       ),
+          //     ),
+          //     onPressed: () {},
+          //     child: const Text(
+          //       "关注",
+          //       style: TextStyle(
+          //           fontSize: 11,
+          //           fontWeight: FontWeight.w500,
+          //           color: Color.fromARGB(255, 253, 183, 200)),
+          //     ),
+          //   ),
+          // )
         ],
       ),
     );
@@ -207,15 +219,16 @@ class _DetialPageState extends State<DetialPage> {
             // 配置宽高比
             aspectRatio: 1 / 1,
             child: Swiper(
+              key: ValueKey(widget.recipeImageList[widget.post_id].length),
               itemBuilder: (BuildContext context, int index) {
                 // 配置图片地址
-                return Image.asset(
-                  widget.recipeImageList[index],
+                return Image.network(
+                  widget.recipeImageList[widget.post_id][index],
                   fit: BoxFit.contain,
                 );
               },
               // 配置图片数量
-              itemCount: widget.recipeImageList.length,
+              itemCount: widget.recipeImageList[widget.post_id].length,
               // 底部分页器
               pagination: const SwiperPagination(
                 builder: DotSwiperPaginationBuilder(
@@ -235,20 +248,16 @@ class _DetialPageState extends State<DetialPage> {
         SizedBox(
           width: 335,
           child: Row(
-            children: const [
-              SizedBox(
+            children: [
+              const SizedBox(
                 width: 10,
               ),
               SizedBox(
                 width: 320,
                 //文字内容
                 child: Text(
-                  '''轻轻的我走了，
-                  zhengjiavj
-                  asjidjai
-                  jajdio
-                  cascas''',
-                  style: TextStyle(
+                  '''${widget.context}''',
+                  style: const TextStyle(
                       fontWeight: FontWeight.w300,
                       fontSize: 14,
                       color: Colors.black),
@@ -260,20 +269,20 @@ class _DetialPageState extends State<DetialPage> {
         const SizedBox(
           height: 20,
         ),
-        const SizedBox(
+        SizedBox(
           height: 13,
           width: 315,
           child: Text.rich(
             TextSpan(
                 text: "发布于  ",
-                style: TextStyle(
+                style: const TextStyle(
                     fontSize: 10,
                     color: Colors.black26,
                     fontWeight: FontWeight.w400),
                 children: [
                   //帖子发布时间
                   TextSpan(
-                    text: "2022/11/22  23:09",
+                    text: "${widget.time}",
                   )
                 ]),
           ),
