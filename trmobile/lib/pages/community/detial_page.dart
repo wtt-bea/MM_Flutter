@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_swiper/flutter_swiper.dart';
 // ignore: depend_on_referenced_packages
-import 'package:english_words/english_words.dart';
+import '../../net/NetRequester.dart';
+import '../../net/TtApi.dart';
+import 'community_page.dart';
 
 class DetialPage extends StatefulWidget {
   Map recipeImageList = {}; //传来的图片
@@ -12,6 +15,7 @@ class DetialPage extends StatefulWidget {
   final post_id;
   final context;
   final time;
+  int commentunm;
   DetialPage(
       {super.key,
       required this.recipeImageList,
@@ -20,15 +24,28 @@ class DetialPage extends StatefulWidget {
       required this.post_id,
       required this.postaccount,
       required this.context,
-      required this.time});
+      required this.time,
+      required this.commentunm});
 
   @override
   State<DetialPage> createState() => _DetialPageState();
 }
 
 class _DetialPageState extends State<DetialPage> {
-  static const loadingTag = "##loading##"; //表尾标记
-  final _words = <String>[loadingTag];
+  final GlobalKey _formKey = GlobalKey<FormState>();
+  List _commentList = [];
+  var _commentContext = "";
+  var _inputContext = "";
+  int _comnum = 0;
+  TextEditingController _textcontroller = TextEditingController();
+  // TextEditingController editingController = TextEditingController();
+  bool keyboard = false; //键盘的弹起、收回状态
+
+  @override
+  initState() {
+    super.initState();
+    _getComment();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,30 +54,29 @@ class _DetialPageState extends State<DetialPage> {
       body: SizedBox(
         width: double.infinity,
         height: double.infinity,
-        child: Column(
-          children: [
-            const SizedBox(height: 15),
-            _topNavBar(context),
-            _pageDisplay(context),
-          ],
-        ),
+        child: Column(children: [
+          const SizedBox(height: 15),
+          _topNavBar(context),
+          Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              _pageDisplay(context),
+              _bottomNavBar(context),
+            ],
+          ),
+        ]),
       ),
     );
   }
 
-  void _retrieveData() {
-    Future.delayed(const Duration(seconds: 2)).then((e) {
-      if (mounted) {
-        setState(() {
-          //重新构建列表
-          _words.insertAll(
-            _words.length - 1,
-            //每次生成20个单词
-            generateWordPairs().take(2).map((e) => e.asPascalCase).toList(),
-          );
-        });
-      }
-    });
+  void _getComment() async {
+    var result = await NetRequester.request(Apis.queryComment(widget.post_id));
+    print(result["data"]);
+    if (mounted) {
+      setState(() {
+        _commentList = result["data"];
+      });
+    }
   }
 
   //顶部导航栏
@@ -82,7 +98,14 @@ class _DetialPageState extends State<DetialPage> {
                 size: 20,
               ),
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CommunityPage(
+                      account: widget.account,
+                    ),
+                  ),
+                );
               },
             ),
           ),
@@ -112,32 +135,166 @@ class _DetialPageState extends State<DetialPage> {
                   fontWeight: FontWeight.w400),
             ),
           ),
-          // SizedBox(
-          //   height: 25,
-          //   width: 50,
-          //   //关注按钮
-          //   child: OutlinedButton(
-          //     style: OutlinedButton.styleFrom(
-          //       padding: const EdgeInsets.only(bottom: 2),
-          //       side: const BorderSide(
-          //           width: 1.0, color: Color.fromARGB(255, 253, 183, 200)),
-          //       shape: RoundedRectangleBorder(
-          //         borderRadius: BorderRadius.circular(15),
-          //       ),
-          //     ),
-          //     onPressed: () {},
-          //     child: const Text(
-          //       "关注",
-          //       style: TextStyle(
-          //           fontSize: 11,
-          //           fontWeight: FontWeight.w500,
-          //           color: Color.fromARGB(255, 253, 183, 200)),
-          //     ),
-          //   ),
-          // )
         ],
       ),
     );
+  }
+
+  //底部导航栏
+  Widget _bottomNavBar(context) {
+    double height = MediaQuery.of(context).padding.bottom;
+    TextEditingController editingController = TextEditingController(); //输入框的编辑
+    return Container(
+        width: double.infinity,
+        child: Column(
+          children: [
+            Container(
+              height: 1,
+              decoration:
+                  BoxDecoration(color: Color.fromARGB(255, 233, 233, 233)),
+              padding: EdgeInsets.only(bottom: keyboard ? 0 : height),
+            ),
+            AnimatedPadding(
+              //可以添加一个动画效果
+              padding: MediaQuery.of(context).viewInsets, //边距（必要）
+              duration: const Duration(milliseconds: 100), //动画时常 （必要）
+              child: Container(
+                color: Colors.white, //评论位置颜色
+                //距离底部边界距离，这个是为了适配全面屏的，keyboard，bool类型，代表键盘的弹起和收回。true谈起，false收回，这个值怎么获取下面会有提到。
+                child: Container(
+                  height: 50, //设置输入框谈起和收回时的高度
+                  width: double.infinity, //设置宽度
+                  //控件横向排版弹性布局
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 40,
+                        width: 295,
+                        margin: EdgeInsets.only(left: 20),
+                        padding:
+                            EdgeInsets.only(left: 15, bottom: 2, right: 15),
+                        decoration: BoxDecoration(
+                            //设置边框、圆角效果
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border:
+                                Border.all(width: 0.5, color: Colors.black38)),
+                        child: Form(
+                          key: _formKey,
+                          child: TextFormField(
+                            maxLines: 1, //最大行数
+                            controller:
+                                _textcontroller, //绑定TextEditController更好操作
+                            style: const TextStyle(
+                              //设置字体、颜色
+                              fontSize: 13,
+                              color: Color.fromARGB(254, 0, 0, 0),
+                            ),
+                            autocorrect: true,
+                            decoration: InputDecoration(
+                              //设置提示内容，字体颜色、大小等
+                              border: InputBorder.none,
+                              hintText: _inputContext,
+                              hintStyle: const TextStyle(
+                                fontSize: 13,
+                                color: Colors.black26,
+                              ),
+                            ),
+                            cursorHeight: 17,
+                            cursorColor: const Color.fromARGB(255, 43, 46, 51),
+                            onChanged: (text) {
+                              // 获取时时输入框的内容
+                              _commentContext = _inputContext + "  " + text;
+                            },
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: 35,
+                        height: 35,
+                        child: IconButton(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onPressed: () async {
+                            (_formKey.currentState as FormState).save();
+                            if (_commentContext == "") {
+                              showDialog(
+                                  context: this.context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: const Text(
+                                        "输入提醒",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      shape: const RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(15))),
+                                      content: const Text(
+                                        "您未输入任何评论哦~",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                      actions: <Widget>[
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                            side: const BorderSide(
+                                                width: 1.0,
+                                                color: Colors.black),
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          ),
+                                          child: const Text(
+                                            "确 认",
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w300),
+                                          ),
+                                        )
+                                      ],
+                                    );
+                                  });
+                            } else {
+                              var result = await NetRequester.request(
+                                  Apis.postComment(widget.post_id,
+                                      widget.account, _commentContext));
+                              var result2 = await NetRequester.request(
+                                  Apis.postAddcomment(widget.post_id));
+                              SystemChannels.textInput
+                                  .invokeMethod<void>('TextInput.hide');
+                              if (mounted) {
+                                setState(() {
+                                  _comnum++;
+                                  _getComment();
+                                  _textcontroller.clear();
+                                  _commentContext = "";
+                                  _inputContext = "";
+                                });
+                              }
+                            }
+                          },
+                          icon: const Icon(Icons.send,
+                              size: 20,
+                              color: Color.fromARGB(255, 247, 176, 194)),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   //实现listview
@@ -156,48 +313,32 @@ class _DetialPageState extends State<DetialPage> {
                 context: context,
                 removeTop: true,
                 child: ListView.builder(
-                  itemCount: _words.length + 2,
+                  itemCount: _commentList.length + 3,
                   itemBuilder: (context, index) {
                     if (index == 0) {
                       return _contentDetials(context);
                     } else if (index == 1) {
                       return _commentBar(context);
-                    } else if (_words[index - 2] == loadingTag) {
-                      if (_words.length - 1 < 4) {
-                        //获取数据
-                        _retrieveData();
-                        //加载时显示loading
-                        return Container(
-                          padding: const EdgeInsets.all(16.0),
-                          alignment: Alignment.center,
-                          child: const SizedBox(
-                            width: 24.0,
-                            height: 24.0,
-                            child: CircularProgressIndicator(strokeWidth: 2.0),
-                          ),
-                        );
-                      } else {
-                        //加载完成
-                        return Container(
-                          alignment: Alignment.center,
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: const [
-                              SizedBox(
-                                height: 10,
-                              ),
-                              Text(
-                                "- The End -",
-                                style: TextStyle(
-                                    color: Colors.black26, fontSize: 11),
-                              ),
-                            ],
-                          ),
-                        );
-                      }
+                    } else if (index == _commentList.length + 2) {
+                      return Container(
+                        alignment: Alignment.center,
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          children: const [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "- The End -",
+                              style: TextStyle(
+                                  color: Colors.black26, fontSize: 11),
+                            ),
+                          ],
+                        ),
+                      );
                     }
                     //评论内容现实列表
-                    return _commentDetials(context);
+                    return _commentDetials(index - 2);
                   },
                 ),
               ),
@@ -209,7 +350,7 @@ class _DetialPageState extends State<DetialPage> {
   }
 
   //帖子详细内容
-  Widget _contentDetials(context) {
+  Widget _contentDetials(iindex) {
     return Column(
       children: [
         SizedBox(
@@ -300,28 +441,28 @@ class _DetialPageState extends State<DetialPage> {
   }
 
   //发表评论
-  Widget _commentBar(context) {
+  Widget _commentBar(index) {
     return Column(
       children: [
         const SizedBox(height: 10),
-        const SizedBox(
+        SizedBox(
           width: 315,
           child: Text.rich(
             TextSpan(
               text: "共 ",
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 11,
                   color: Colors.black38,
                   fontWeight: FontWeight.w400),
               children: [
                 //评论数目
                 TextSpan(
-                    text: "10",
-                    style: TextStyle(
+                    text: "${widget.commentunm + _comnum}",
+                    style: const TextStyle(
                         fontSize: 11,
                         color: Colors.black38,
                         fontWeight: FontWeight.w400)),
-                TextSpan(
+                const TextSpan(
                     text: " 条评论",
                     style: TextStyle(
                         fontSize: 11,
@@ -334,7 +475,7 @@ class _DetialPageState extends State<DetialPage> {
         const SizedBox(height: 10),
         Row(
           children: [
-            const SizedBox(width: 25),
+            const SizedBox(width: 20),
             SizedBox(
               //用户头像
               height: 30,
@@ -347,39 +488,55 @@ class _DetialPageState extends State<DetialPage> {
             const SizedBox(
               width: 10,
             ),
-            Container(
-              width: 270,
+            SizedBox(
+              width: 280,
               height: 30,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(20),
-                ),
-                color: Color.fromARGB(17, 0, 0, 0),
-              ),
-              child: SizedBox(
-                width: 260,
-                height: 30,
-                //评论框
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    contentPadding: EdgeInsets.only(left: 10, bottom: 15),
-                    border: InputBorder.none,
-                    hintText: '爱评论的人运气都不会太差',
-                    hintStyle: TextStyle(
-                        color: Color.fromARGB(146, 53, 53, 53),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300),
+              child: Container(
+                width: 120,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(20),
                   ),
-                  style: const TextStyle(
-                      color: Color.fromARGB(255, 43, 46, 51),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w300),
-                  cursorColor: const Color.fromARGB(255, 43, 46, 51),
-                  cursorHeight: 16,
-                  // onSaved: (v) => _searchContext = v!,
+                  color: Color.fromARGB(17, 0, 0, 0),
+                ),
+                //评论框
+                child: Form(
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 240,
+                        height: 30,
+                        child: TextButton(
+                          style: ButtonStyle(overlayColor:
+                              MaterialStateProperty.resolveWith((states) {
+                            return Colors.transparent;
+                          })),
+                          child: Container(
+                            width: 235,
+                            child: const Text(
+                              "爱评论的人运气都不会太差哦",
+                              style: TextStyle(
+                                  color: Color.fromARGB(121, 43, 46, 51),
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                          onPressed: () {
+                            if (mounted) {
+                              setState(() {
+                                _inputContext = "";
+                              });
+                            }
+                            SystemChannels.textInput
+                                .invokeMethod<void>('TextInput.show');
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )
+            ),
           ],
         ),
         const SizedBox(height: 20)
@@ -388,69 +545,107 @@ class _DetialPageState extends State<DetialPage> {
   }
 
   //查看评论
-  Widget _commentDetials(context) {
+  Widget _commentDetials(index) {
     return ListTile(
       leading: Container(
         transform: Matrix4.translationValues(0.0, -10, 0.0),
         margin: const EdgeInsets.only(left: 8),
-        width: 32,
-        height: 32,
+        width: 35,
+        height: 35,
         //评论人头像
-        child: const CircleAvatar(
-          backgroundImage:
-              NetworkImage("https://www.itying.com/images/flutter/4.png"),
+        child: CircleAvatar(
+          backgroundImage: NetworkImage(
+              "http://172.20.10.5/images/${_commentList[index]["account"]}.png"),
         ),
       ),
       title: Container(
-        //修改leading和title之间的距离
-        transform: Matrix4.translationValues(-5, 0.0, 0.0),
-        child: Column(
-          children: [
-            const SizedBox(
-              width: 270,
-              //评论人用户名
-              child: Text(
-                "ni的名字yia",
-                style: TextStyle(
-                    color: Color.fromARGB(255, 154, 154, 154),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w300),
+          //修改leading和title之间的距离
+          transform: Matrix4.translationValues(-5, 0.0, 0.0),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 265,
+                child: Column(
+                  children: [
+                    Container(
+                      // decoration: BoxDecoration(color: Colors.black12),
+                      width: 265,
+                      height: 20,
+                      //评论人用户名
+                      child: Text(
+                        "${_commentList[index]["name"]}",
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 154, 154, 154),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w300),
+                      ),
+                    ),
+                    const SizedBox(height: 3),
+                    SizedBox(
+                      width: 265,
+                      //评论内容
+                      child: Text(
+                        "${_commentList[index]["context"]}",
+                        style: const TextStyle(
+                            color: Color.fromARGB(255, 56, 56, 56),
+                            fontSize: 13,
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        SizedBox(
+                          width: 240,
+                          height: 10,
+                          //评论时间
+                          child: Text(
+                            "${_commentList[index]["date"]}",
+                            style: const TextStyle(
+                                color: Colors.black26,
+                                fontSize: 9,
+                                fontWeight: FontWeight.w300),
+                          ),
+                        ),
+                        Container(
+                          width: 20,
+                          height: 20,
+                          margin: EdgeInsets.only(bottom: 5),
+                          child: IconButton(
+                            splashColor: Colors.transparent,
+                            highlightColor: Colors.transparent,
+                            onPressed: () {
+                              SystemChannels.textInput
+                                  .invokeMethod<void>('TextInput.show');
+                              if (mounted) {
+                                setState(() {
+                                  _inputContext =
+                                      "@${_commentList[index]["name"]}";
+                                });
+                              }
+                            },
+                            icon: const Icon(
+                              IconData(
+                                0xe60a,
+                                fontFamily: "MyIcons",
+                              ),
+                              color: Color.fromARGB(255, 151, 150, 150),
+                              size: 14,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      height: 1,
+                      width: 265,
+                      decoration: const BoxDecoration(
+                          color: Color.fromARGB(10, 0, 0, 0)),
+                    )
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 3),
-            const SizedBox(
-              width: 270,
-              //评论内容
-              child: Text(
-                "能不能告诉我 30,width:",
-                style: TextStyle(
-                    color: Color.fromARGB(255, 56, 56, 56),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400),
-              ),
-            ),
-            const SizedBox(height: 10),
-            const SizedBox(
-              width: 270,
-              //评论时间
-              child: Text(
-                "2022/12/2 18:00",
-                style: TextStyle(
-                    color: Colors.black26,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w300),
-              ),
-            ),
-            const SizedBox(height: 5),
-            Container(
-              height: 1,
-              width: 270,
-              decoration:
-                  const BoxDecoration(color: Color.fromARGB(10, 0, 0, 0)),
-            )
-          ],
-        ),
-      ),
+            ],
+          )),
     );
   }
 }

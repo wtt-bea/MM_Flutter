@@ -947,6 +947,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                 postaccount: _words[index]["account"],
                                 context: _words[index]["context"],
                                 time: _words[index]["date"].substring(0, 16),
+                                commentunm: _words[index]["comment_number"],
                               )));
                 },
             ),
@@ -1053,6 +1054,7 @@ class _CommunityPageState extends State<CommunityPage> {
                                     context: _words[index]["context"],
                                     time:
                                         _words[index]["date"].substring(0, 16),
+                                    commentunm: _words[index]["comment_number"],
                                   )));
                     },
                   ),
