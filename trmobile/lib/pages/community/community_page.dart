@@ -28,8 +28,8 @@ class _CommunityPageState extends State<CommunityPage> {
   final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
   static const loadingTag = "##loading##"; //表尾标记
   List _words = <dynamic>[];
-  bool _isLike = false;
-
+  // bool isLike = false;
+  int liken = 0;
   // List imageList = [
   //   'lib/assets/images/A.png',
   //   'lib/assets/images/B.png',
@@ -38,6 +38,7 @@ class _CommunityPageState extends State<CommunityPage> {
   // http://172.20.10.5/images/
 
   Map imageList = {};
+  List _likeList = [];
 
   String _planet = "焦虑星";
 
@@ -46,6 +47,7 @@ class _CommunityPageState extends State<CommunityPage> {
     super.initState();
     _getPlanet();
     _retrieveData();
+    _getLike();
   }
 
   final GlobalKey _formKey = GlobalKey<FormState>();
@@ -514,7 +516,7 @@ class _CommunityPageState extends State<CommunityPage> {
                 child: ListView.separated(
                   itemCount: _words.length + 1,
                   itemBuilder: (context, index) {
-                    if (_words == null) {
+                    if (_words == []) {
                       return Container(
                         padding: const EdgeInsets.all(16.0),
                         alignment: Alignment.center,
@@ -525,7 +527,6 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                       );
                     } else if (index == _words.length) {
-                      // 不足100条，继续获取数据
                       // 加载完成
                       return Container(
                         alignment: Alignment.center,
@@ -544,10 +545,10 @@ class _CommunityPageState extends State<CommunityPage> {
                         ),
                       );
                     } else {
+                      //社区内容现实列表
                       print(index);
                       return _postShow(index);
                     }
-                    //社区内容现实列表
                   },
                   separatorBuilder: (context, index) =>
                       const Divider(height: .0),
@@ -677,7 +678,7 @@ class _CommunityPageState extends State<CommunityPage> {
         }
       }
       newimageList[data1[index]["post_id"]] = aList;
-      print(newimageList);
+      // print(newimageList);
     }
     if (mounted) {
       setState(() {
@@ -697,13 +698,18 @@ class _CommunityPageState extends State<CommunityPage> {
     }
   }
 
-  // void _getImage(index) async {
-  //   var result = await NetRequester.request(Apis.queryImage());
-  //   for (int i = 0; i < result["data"].length; i++) {
-  //     imageList.add(result["data"][i]["url"]);
-  //   }
-  //   print(imageList);
-  // }
+  void _getLike() async {
+    List likeList = [];
+    var result = await NetRequester.request(Apis.queryLike(widget.account));
+    for (int i = 0; i < result["data"].length; i++) {
+      likeList.add(result["data"][i]["post_id"]);
+    }
+    if (mounted) {
+      setState(() {
+        _likeList = likeList;
+      });
+    }
+  }
 
   //底部导航栏
   Widget _bottomNav(context) {
@@ -952,89 +958,129 @@ class _CommunityPageState extends State<CommunityPage> {
 
   //点赞和评论
   Widget _likeBtn(index) {
-    return SizedBox(
-      width: 335,
-      child: Row(children: [
-        SizedBox(
-          width: 325,
-          height: 25,
-          child: Row(
-            children: [
-              Container(
-                width: 25,
-                transform: Matrix4.translationValues(0.0, -5, 0.0),
-                //点赞按钮
-                child: IconButton(
-                  icon: Icon(
-                    const IconData(
-                      0xe616,
-                      fontFamily: "MyIcons",
-                    ),
-                    size: 20,
-                    color: _isLike
-                        ? Color.fromARGB(255, 231, 62, 50)
-                        : Color.fromARGB(255, 45, 42, 41),
+    var isLike = _likeList.contains(_words[index]["post_id"]);
+    return StatefulBuilder(builder:
+        (BuildContext context, void Function(void Function()) setState) {
+      return SizedBox(
+        width: 335,
+        child: Row(children: [
+          SizedBox(
+            width: 325,
+            height: 25,
+            child: Row(
+              children: [
+                Container(
+                  width: 25,
+                  transform: Matrix4.translationValues(0.0, -5, 0.0),
+                  //点赞按钮
+                  child: IconButton(
+                    icon: isLike
+                        ? const Icon(Icons.favorite,
+                            size: 20, color: Color.fromARGB(255, 231, 62, 50))
+                        : const Icon(
+                            IconData(
+                              0xe616,
+                              fontFamily: "MyIcons",
+                            ),
+                            size: 20,
+                            color: Color.fromARGB(255, 231, 62, 50)),
+                    onPressed: () async {
+                      if (isLike == true) {
+                        var result1 = await NetRequester.request(
+                            Apis.deldetePostLike(_words[index]["post_id"]));
+                        var result2 = await NetRequester.request(
+                            Apis.deleteLike(
+                                _words[index]["post_id"], widget.account));
+                        liken = 0;
+                        print("取消$result1");
+                        print("取消$result2");
+                      } else {
+                        var result1 = await NetRequester.request(
+                            Apis.insertPostLike(_words[index]["post_id"]));
+                        var result2 = await NetRequester.request(
+                            Apis.insertLike(
+                                _words[index]["post_id"], widget.account));
+                        liken = 1;
+                        print("点赞$result1");
+                        print("点赞$result2");
+                      }
+                      isLike = !isLike;
+                      _getLike();
+                    },
                   ),
-                  onPressed: () {},
                 ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 5),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    //点赞数量
-                    SizedBox(
-                      child: Text(
-                        "${_words[index]["like_number"]}",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w300, fontSize: 12),
+                Container(
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 8,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                transform: Matrix4.translationValues(0.0, -5, 0.0),
-                padding: const EdgeInsets.only(left: 10),
-                //评论按钮
-                child: IconButton(
-                  icon: const Icon(
-                    IconData(
-                      0xe60a,
-                      fontFamily: "MyIcons",
-                    ),
-                    color: Color.fromARGB(255, 231, 62, 50),
-                    size: 20,
+                      //点赞数量
+                      SizedBox(
+                        child: Text(
+                          "${_words[index]["like_number"] + liken}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w300, fontSize: 12),
+                        ),
+                      ),
+                    ],
                   ),
-                  onPressed: () {},
                 ),
-              ),
-              Container(
-                transform: Matrix4.translationValues(-10, 0.0, 0.0),
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      //评论数量
-                      child: Text(
-                        "${_words[index]["comment_number"]}",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w300, fontSize: 12),
+                Container(
+                  transform: Matrix4.translationValues(0.0, -5, 0.0),
+                  padding: const EdgeInsets.only(left: 10),
+                  //评论按钮
+                  child: IconButton(
+                    icon: const Icon(
+                      IconData(
+                        0xe60a,
+                        fontFamily: "MyIcons",
                       ),
+                      color: Color.fromARGB(255, 231, 62, 50),
+                      size: 20,
                     ),
-                  ],
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => DetialPage(
+                                    recipeImageList: imageList,
+                                    account: widget.account,
+                                    name: _words[index]["name"],
+                                    post_id: _words[index]["post_id"],
+                                    postaccount: _words[index]["account"],
+                                    context: _words[index]["context"],
+                                    time:
+                                        _words[index]["date"].substring(0, 16),
+                                  )));
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        )
-      ]),
-    );
+                Container(
+                  transform: Matrix4.translationValues(-10, 0.0, 0.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      SizedBox(
+                        //评论数量
+                        child: Text(
+                          "${_words[index]["comment_number"]}",
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w300, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          )
+        ]),
+      );
+    });
   }
 
   //展示帖子
@@ -1052,13 +1098,12 @@ class _CommunityPageState extends State<CommunityPage> {
             //每个帖子的导航栏
             child: _contextNavBar(index),
           ),
-
           _swiperPic(index),
           const SizedBox(
             height: 10,
           ),
           _textContext(index),
-          // _likeBtn(index),
+          _likeBtn(index),
           const SizedBox(
             height: 15,
           )
