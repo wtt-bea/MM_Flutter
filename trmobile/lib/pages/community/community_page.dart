@@ -9,6 +9,7 @@ import "detial_page.dart";
 import '../../net/TtApi.dart';
 import '../../net/NetRequester.dart';
 import '../../model/User.dart';
+import '../home/home_page.dart';
 import 'dart:async';
 
 class CommunityPage extends StatefulWidget {
@@ -656,10 +657,10 @@ class _CommunityPageState extends State<CommunityPage> {
         () async => {
               result1 = await NetRequester.request(Apis.receive(_planet)),
               result2 = await NetRequester.request(Apis.queryImage()),
-            }).then((value) => {nn(result1, result2)});
+            }).then((value) => {picbuilder(result1, result2)});
   }
 
-  void nn(result1, result2) {
+  void picbuilder(result1, result2) {
     var data1 = result1["data"];
     var data2 = result2["data"];
     Map newimageList = {};
@@ -871,7 +872,14 @@ class _CommunityPageState extends State<CommunityPage> {
                 ],
               ),
               //家按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
         ],

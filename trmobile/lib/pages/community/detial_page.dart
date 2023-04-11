@@ -204,7 +204,7 @@ class _DetialPageState extends State<DetialPage> {
                             cursorColor: const Color.fromARGB(255, 43, 46, 51),
                             onChanged: (text) {
                               // 获取时时输入框的内容
-                              _commentContext = _inputContext + "  " + text;
+                              _commentContext = _inputContext + text;
                             },
                           ),
                         ),
@@ -619,7 +619,7 @@ class _DetialPageState extends State<DetialPage> {
                               if (mounted) {
                                 setState(() {
                                   _inputContext =
-                                      "@${_commentList[index]["name"]}";
+                                      "@${_commentList[index]["name"]}  ";
                                 });
                               }
                             },

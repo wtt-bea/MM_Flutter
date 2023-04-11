@@ -63,4 +63,9 @@ class Apis {
   static String postAddcomment(String post_id) {
     return "/post/postAddcomment?post_id=$post_id";
   }
+
+  //查询个人主页中的帖子
+  static String postHome(String account) {
+    return "/post/postHome?account=$account";
+  }
 }
