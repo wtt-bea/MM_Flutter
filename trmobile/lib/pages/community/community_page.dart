@@ -31,12 +31,7 @@ class _CommunityPageState extends State<CommunityPage> {
   List _words = <dynamic>[];
   // bool isLike = false;
   int liken = 0;
-  // List imageList = [
-  //   'lib/assets/images/A.png',
-  //   'lib/assets/images/B.png',
-  //   'lib/assets/images/C.png'
-  // ];
-  // http://172.20.10.5/images/
+  var imgKey = UniqueKey();
 
   Map imageList = {};
   List _likeList = [];
@@ -52,7 +47,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   final GlobalKey _formKey = GlobalKey<FormState>();
-  late String _searchContext = "";
+  // late String _searchContext = "";
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +72,7 @@ class _CommunityPageState extends State<CommunityPage> {
             _topNavBar(),
             const SizedBox(height: 13),
             _contextShow(context),
-            const SizedBox(height: 17),
+            const SizedBox(height: 12),
             _bottomNav(context),
           ],
         ),
@@ -377,115 +372,115 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  //搜索bar
-  Widget _searchBar(context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      width: 320,
-      height: 35,
-      child: Row(
-        children: [
-          SizedBox(
-            width: 255,
-            height: 35,
-            child: Form(
-              key: _formKey,
-              autovalidateMode: AutovalidateMode.onUserInteraction,
-              child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        bottomLeft: Radius.circular(20)),
-                    color: Color.fromARGB(20, 250, 123, 155),
-                  ),
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const SizedBox(
-                        width: 20,
-                        child: Icon(
-                          IconData(
-                            0xe632,
-                            fontFamily: "MyIcons",
-                          ),
-                          size: 20,
-                          color: Color.fromARGB(200, 53, 53, 53),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      SizedBox(
-                        width: 200,
-                        height: 35,
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '搜索你感兴趣的东西',
-                            hintStyle: TextStyle(
-                                color: Color.fromARGB(146, 53, 53, 53),
-                                fontSize: 13,
-                                fontWeight: FontWeight.w300),
-                          ),
-                          //输入后字体
-                          style: const TextStyle(
-                              color: Color.fromARGB(255, 43, 46, 51),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w300),
-                          cursorColor: const Color.fromARGB(255, 43, 46, 51),
-                          // cursorRadius: const Radius.circular(5),
-                          cursorHeight: 20,
-                          onSaved: (v) => _searchContext = v!,
-                        ),
-                      )
-                    ],
-                  )),
-            ),
-          ),
-          const SizedBox(
-            width: 5,
-          ),
-          SizedBox(
-            width: 60,
-            height: 35,
-            child: Container(
-              width: 55,
-              height: 35,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
-                color: Color.fromARGB(60, 234, 101, 134),
-              ),
-              child: TextButton(
-                style: ButtonStyle(
-                  overlayColor: MaterialStateProperty.all(Colors.transparent),
-                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20))),
-                ),
-                //搜索按钮
-                onPressed: () {},
-                child: const Text(
-                  "搜索",
-                  style: TextStyle(
-                      color: Color.fromARGB(200, 53, 53, 53),
-                      fontSize: 13,
-                      fontWeight: FontWeight.w400),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
+  // //搜索bar
+  // Widget _searchBar(context) {
+  //   return Container(
+  //     margin: const EdgeInsets.only(bottom: 10),
+  //     width: 320,
+  //     height: 35,
+  //     child: Row(
+  //       children: [
+  //         SizedBox(
+  //           width: 255,
+  //           height: 35,
+  //           child: Form(
+  //             key: _formKey,
+  //             autovalidateMode: AutovalidateMode.onUserInteraction,
+  //             child: Container(
+  //                 decoration: const BoxDecoration(
+  //                   borderRadius: BorderRadius.only(
+  //                       topLeft: Radius.circular(20),
+  //                       bottomLeft: Radius.circular(20)),
+  //                   color: Color.fromARGB(20, 250, 123, 155),
+  //                 ),
+  //                 child: Row(
+  //                   children: [
+  //                     const SizedBox(
+  //                       width: 10,
+  //                     ),
+  //                     const SizedBox(
+  //                       width: 20,
+  //                       child: Icon(
+  //                         IconData(
+  //                           0xe632,
+  //                           fontFamily: "MyIcons",
+  //                         ),
+  //                         size: 20,
+  //                         color: Color.fromARGB(200, 53, 53, 53),
+  //                       ),
+  //                     ),
+  //                     const SizedBox(
+  //                       width: 5,
+  //                     ),
+  //                     SizedBox(
+  //                       width: 200,
+  //                       height: 35,
+  //                       child: TextFormField(
+  //                         decoration: const InputDecoration(
+  //                           border: InputBorder.none,
+  //                           hintText: '搜索你感兴趣的东西',
+  //                           hintStyle: TextStyle(
+  //                               color: Color.fromARGB(146, 53, 53, 53),
+  //                               fontSize: 13,
+  //                               fontWeight: FontWeight.w300),
+  //                         ),
+  //                         //输入后字体
+  //                         style: const TextStyle(
+  //                             color: Color.fromARGB(255, 43, 46, 51),
+  //                             fontSize: 14,
+  //                             fontWeight: FontWeight.w300),
+  //                         cursorColor: const Color.fromARGB(255, 43, 46, 51),
+  //                         // cursorRadius: const Radius.circular(5),
+  //                         cursorHeight: 20,
+  //                         onSaved: (v) => _searchContext = v!,
+  //                       ),
+  //                     )
+  //                   ],
+  //                 )),
+  //           ),
+  //         ),
+  //         const SizedBox(
+  //           width: 5,
+  //         ),
+  //         SizedBox(
+  //           width: 60,
+  //           height: 35,
+  //           child: Container(
+  //             width: 55,
+  //             height: 35,
+  //             decoration: const BoxDecoration(
+  //               borderRadius: BorderRadius.only(
+  //                   topRight: Radius.circular(20),
+  //                   bottomRight: Radius.circular(20)),
+  //               color: Color.fromARGB(60, 234, 101, 134),
+  //             ),
+  //             child: TextButton(
+  //               style: ButtonStyle(
+  //                 overlayColor: MaterialStateProperty.all(Colors.transparent),
+  //                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
+  //                     borderRadius: BorderRadius.circular(20))),
+  //               ),
+  //               //搜索按钮
+  //               onPressed: () {},
+  //               child: const Text(
+  //                 "搜索",
+  //                 style: TextStyle(
+  //                     color: Color.fromARGB(200, 53, 53, 53),
+  //                     fontSize: 13,
+  //                     fontWeight: FontWeight.w400),
+  //               ),
+  //             ),
+  //           ),
+  //         )
+  //       ],
+  //     ),
+  //   );
+  // }
 
   //生成listview
   Widget _contextShow(context) {
     return Container(
-      height: 601,
+      height: 615,
       width: 335,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(
@@ -510,7 +505,7 @@ class _CommunityPageState extends State<CommunityPage> {
             //搜索bar
             // _searchBar(context),
             SizedBox(
-              height: 575,
+              height: 595,
               child: MediaQuery.removePadding(
                 context: context,
                 removeTop: true,
@@ -576,7 +571,7 @@ class _CommunityPageState extends State<CommunityPage> {
           width: 45,
           child: CircleAvatar(
             backgroundImage: NetworkImage(
-                "http://172.20.10.5/images/${_words[index]["account"]}.png"),
+                "http://172.20.10.5/images/${_words[index]["account"]}.png?$imgKey"),
           ),
         ),
         SizedBox(
@@ -685,6 +680,7 @@ class _CommunityPageState extends State<CommunityPage> {
       setState(() {
         _words = result1["data"];
         imageList = newimageList;
+        imgKey = UniqueKey();
       });
     }
   }

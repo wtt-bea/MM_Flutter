@@ -68,4 +68,39 @@ class Apis {
   static String postHome(String account) {
     return "/post/postHome?account=$account";
   }
+
+  //查询个信息
+  static String userInfo(String account) {
+    return "/user/userInfo?account=$account";
+  }
+
+  //新增todolist
+  static String insertTodo(String account, String context) {
+    return "/todolist/insertTodo?account=$account&context=$context";
+  }
+
+  //获取所有todolist
+  static String queryTodo(String account) {
+    return "/todolist/queryTodo?account=$account";
+  }
+
+  //删除todolist
+  static String deleteTodo(int list_id) {
+    return "/todolist/deleteTodo?list_id=$list_id";
+  }
+
+  //修改完成状态
+  static String updateTodo(int list_id) {
+    return "/todolist/updateTodo?list_id=$list_id";
+  }
+
+  //查询是否签到
+  static String isClock(String account) {
+    return "/user/isClock?account=$account";
+  }
+
+  //增加签到数目
+  static String updateClock(String account) {
+    return "/user/updateClock?account=$account";
+  }
 }

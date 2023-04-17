@@ -40,7 +40,7 @@ class _DetialPageState extends State<DetialPage> {
   TextEditingController _textcontroller = TextEditingController();
   // TextEditingController editingController = TextEditingController();
   bool keyboard = false; //键盘的弹起、收回状态
-
+  var imgKey = UniqueKey();
   @override
   initState() {
     super.initState();
@@ -75,6 +75,7 @@ class _DetialPageState extends State<DetialPage> {
     if (mounted) {
       setState(() {
         _commentList = result["data"];
+        imgKey = UniqueKey();
       });
     }
   }
@@ -555,7 +556,7 @@ class _DetialPageState extends State<DetialPage> {
         //评论人头像
         child: CircleAvatar(
           backgroundImage: NetworkImage(
-              "http://172.20.10.5/images/${_commentList[index]["account"]}.png"),
+              "http://172.20.10.5/images/${_commentList[index]["account"]}.png?$imgKey"),
         ),
       ),
       title: Container(

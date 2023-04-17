@@ -267,7 +267,14 @@ class _LoginPageState extends State<LoginPage> {
           if (result["message"] == "true") {
             final user = User.fromJson(result["data"]);
             print(user);
-            Get.snackbar("成功登陆", "欢迎回家${user.name}",
+            String? data = user.age;
+            int year = int.parse(data!.substring(0, 4));
+            int month = int.parse(data.substring(5, 7));
+            int day = int.parse(data.substring(8, 10));
+            var dateOfBirth = DateTime(year, month, day);
+            var currentDate = DateTime.now();
+            var different = currentDate.difference(dateOfBirth).inDays + 1;
+            Get.snackbar("成功登陆", "欢迎回家${user.name} 这是您来到漫漫宇宙的$different天",
                 backgroundColor: Color.fromARGB(200, 255, 255, 255),
                 duration: const Duration(seconds: 4));
             Navigator.push(

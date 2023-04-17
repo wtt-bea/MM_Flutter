@@ -27,6 +27,12 @@ class _PostPageState extends State<PostPage> {
       images: <ImageFile>[] // array of pre/default selected images
       );
   final TextEditingController _postText = TextEditingController();
+
+  @override
+  initState() {
+    super.initState();
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -237,7 +243,6 @@ class _PostPageState extends State<PostPage> {
                     fontWeight: FontWeight.w300),
               ),
             ),
-            //TODO 添加图片
             SizedBox(
               height: 400,
               child: MultiImagePickerView(

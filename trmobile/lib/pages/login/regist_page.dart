@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:trmobile/pages/community/community_page.dart';
-// import '../../pages/login/login_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-// import '../../net/TtApi.dart';
-// import '../../net/NetRequester.dart';
-// import 'dart:typed_data';
 import 'package:dio/dio.dart';
 
 class RegistPage extends StatefulWidget {
@@ -135,7 +130,7 @@ class _RegistPageState extends State<RegistPage> {
   //Slogin
   Widget _slogin() {
     return const Text.rich(TextSpan(
-        text: "Welcom to MM Universe!",
+        text: "Welcom to MM universe",
         style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold)));
   }
 
@@ -654,13 +649,13 @@ class _RegistPageState extends State<RegistPage> {
                 children: const [
                   SizedBox(width: 65),
                   Text("I'm ready", style: TextStyle(color: Colors.white)),
-                  Icon(Icons.chevron_right)
+                  Icon(Icons.chevron_right, color: Colors.white)
                 ],
               ),
             )));
   }
 
-  //TODO设置头像
+  //设置头像
   Widget _avatarChose(context) {
     return Center(
       child: Row(

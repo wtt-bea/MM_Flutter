@@ -7,6 +7,9 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:io';
 import 'package:flutter/gestures.dart';
 import 'homedetial_page.dart';
+import 'infochange_page.dart';
+import 'clock_page.dart';
+import 'remind_page.dart';
 
 class HomePage extends StatefulWidget {
   final account;
@@ -27,6 +30,7 @@ class _HomePageState extends State<HomePage> {
   Map _imageList = {};
   List _likeList = [];
   int liken = 0;
+  var imgKey = UniqueKey();
 
   @override
   initState() {
@@ -114,6 +118,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 );
+                ImageCache imageCache = PaintingBinding.instance.imageCache;
+                imageCache.clear();
               },
             ),
           ),
@@ -210,13 +216,14 @@ class _HomePageState extends State<HomePage> {
   Widget _infoChange(context) {
     return Container(
       height: 35,
-      width: 130,
-      margin: EdgeInsets.only(right: 250),
+      width: 110,
+      margin: const EdgeInsets.only(right: 260),
       decoration: BoxDecoration(
-        color: Color.fromARGB(40, 255, 255, 255),
+        color: const Color.fromARGB(40, 255, 255, 255),
         border: Border.all(
-            color: Color.fromARGB(255, 255, 255, 255), width: 2), // border
-        borderRadius: BorderRadius.horizontal(right: Radius.circular(5)),
+            color: const Color.fromARGB(255, 255, 255, 255),
+            width: 2), // border
+        borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
@@ -224,7 +231,16 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(
               color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => InfochangePage(
+                account: widget.account,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -247,7 +263,16 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(
               color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RemindPage(
+                account: widget.account,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -270,7 +295,16 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(
               color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ClockPage(
+                account: widget.account,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -278,7 +312,7 @@ class _HomePageState extends State<HomePage> {
   //个人主页生成
   Widget _listView(context) {
     return Container(
-      height: 533,
+      height: 550,
       width: 340,
       decoration: BoxDecoration(
         color: Color.fromARGB(230, 255, 255, 255),
@@ -358,8 +392,6 @@ class _HomePageState extends State<HomePage> {
     var result1 = await NetRequester.request(Apis.postHome(widget.account));
     var result2 = await NetRequester.request(Apis.queryImage());
     picbuilder(result1, result2);
-    print(result1);
-    print(result2);
   }
 
   //获取点赞
@@ -402,6 +434,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _data = result1["data"];
         _imageList = newimageList;
+        imgKey = UniqueKey();
       });
     }
   }
@@ -449,7 +482,8 @@ class _HomePageState extends State<HomePage> {
           width: 45,
           child: CircleAvatar(
             backgroundImage: NetworkImage(
-                "http://172.20.10.5/images/${_data[index]["account"]}.png"),
+                "http://172.20.10.5/images/${_data[index]["account"]}.png?$imgKey"),
+            key: imgKey,
           ),
         ),
         SizedBox(
