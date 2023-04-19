@@ -10,6 +10,8 @@ import 'homedetial_page.dart';
 import 'infochange_page.dart';
 import 'clock_page.dart';
 import 'remind_page.dart';
+import '../music/music_page.dart';
+import '../letter/letter_page.dart';
 
 class HomePage extends StatefulWidget {
   final account;
@@ -149,7 +151,14 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               //助眠按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MusicPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(
@@ -178,7 +187,14 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               //信箱按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LetterPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(

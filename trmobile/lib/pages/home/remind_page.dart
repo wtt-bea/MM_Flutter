@@ -57,7 +57,7 @@ class _RemindPageState extends State<RemindPage> {
           _itemRemind(context),
           const SizedBox(height: 10),
           _dailyCheckins(context),
-          const SizedBox(height: 25),
+          const SizedBox(height: 23),
           Stack(
             alignment: Alignment.bottomCenter,
             children: [

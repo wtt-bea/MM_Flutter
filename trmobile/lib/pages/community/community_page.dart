@@ -11,9 +11,11 @@ import '../../net/NetRequester.dart';
 import '../../model/User.dart';
 import '../home/home_page.dart';
 import 'dart:async';
+import '../music/music_page.dart';
+import '../letter/letter_page.dart';
 
 class CommunityPage extends StatefulWidget {
-  late final account;
+  final account;
   CommunityPage({
     super.key,
     required this.account,
@@ -164,10 +166,9 @@ class _CommunityPageState extends State<CommunityPage> {
                         flag_3 = true;
                         flag_4 = true;
                         flag_5 = true;
-                        setState(() {
-                          _planet = "焦虑星";
-                          _retrieveData();
-                        });
+
+                        _planet = "焦虑星";
+                        _retrieveData();
                       }
                     },
                   ),
@@ -211,10 +212,9 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = true;
                           flag_4 = true;
                           flag_5 = true;
-                          setState(() {
-                            _planet = "倦怠星";
-                            _retrieveData();
-                          });
+
+                          _planet = "倦怠星";
+                          _retrieveData();
                         });
                       }
                     },
@@ -259,10 +259,9 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = false;
                           flag_4 = true;
                           flag_5 = true;
-                          setState(() {
-                            _planet = "失落星";
-                            _retrieveData();
-                          });
+
+                          _planet = "失落星";
+                          _retrieveData();
                         });
                       }
                     },
@@ -307,10 +306,9 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = true;
                           flag_4 = false;
                           flag_5 = true;
-                          setState(() {
-                            _planet = "不开星";
-                            _retrieveData();
-                          });
+
+                          _planet = "不开星";
+                          _retrieveData();
                         });
                       }
                     },
@@ -355,10 +353,9 @@ class _CommunityPageState extends State<CommunityPage> {
                           flag_3 = true;
                           flag_4 = true;
                           flag_5 = false;
-                          setState(() {
-                            _planet = "痛苦星";
-                            _retrieveData();
-                          });
+
+                          _planet = "痛苦星";
+                          _retrieveData();
                         });
                       }
                     },
@@ -777,7 +774,14 @@ class _CommunityPageState extends State<CommunityPage> {
                 ],
               ),
               //助眠按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MusicPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(
@@ -842,7 +846,14 @@ class _CommunityPageState extends State<CommunityPage> {
                 ],
               ),
               //信箱按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LetterPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(

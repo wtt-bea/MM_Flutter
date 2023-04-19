@@ -6,6 +6,8 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import '../../net/NetRequester.dart';
 import '../../net/TtApi.dart';
 import 'home_page.dart';
+import '../music/music_page.dart';
+import '../letter/letter_page.dart';
 
 class HomedetialPage extends StatefulWidget {
   Map recipeImageList = {}; //传来的图片

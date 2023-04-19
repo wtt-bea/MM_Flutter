@@ -103,4 +103,10 @@ class Apis {
   static String updateClock(String account) {
     return "/user/updateClock?account=$account";
   }
+
+  //修改用户信息不包括头像
+  static String updateUsers(
+      String account, String date, String name, String planet) {
+    return "/user/updateUsers?account=$account&date=$date&name=$name&planet=$planet";
+  }
 }

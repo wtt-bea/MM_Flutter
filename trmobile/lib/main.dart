@@ -9,6 +9,7 @@ import 'model/User.dart';
 import 'pages/home/home_page.dart';
 import 'package:get/get.dart';
 import 'pages/home/remind_page.dart';
+import 'pages/music/music_page.dart';
 
 void main() => runApp(const MyApp());
 
@@ -21,8 +22,8 @@ class MyApp extends StatelessWidget {
       title: '漫漫',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: LoginPage(),
-      // home: const RemindPage(account: "1"),
+      // home: LoginPage(),
+      home: const MusicPage(account: "1"),
     );
   }
 }

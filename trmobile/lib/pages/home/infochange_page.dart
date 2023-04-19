@@ -10,6 +10,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'dart:io';
+import '../music/music_page.dart';
+import '../letter/letter_page.dart';
 
 class InfochangePage extends StatefulWidget {
   final account;
@@ -157,7 +159,14 @@ class _InfochangePageState extends State<InfochangePage> {
                 ],
               ),
               //助眠按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MusicPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(
@@ -186,7 +195,14 @@ class _InfochangePageState extends State<InfochangePage> {
                 ],
               ),
               //信箱按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LetterPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(
@@ -613,7 +629,7 @@ class _InfochangePageState extends State<InfochangePage> {
               if (_newPlanet != "敬请期待") {
                 _planet = _newPlanet;
               }
-              if (_imageFile != "") {
+              if (_imageFile != null) {
                 FormData formData = FormData.fromMap({
                   "account": widget.account,
                   "name": _name,
@@ -625,13 +641,21 @@ class _InfochangePageState extends State<InfochangePage> {
                 var dio = Dio();
                 result = await dio.post("http://172.20.10.5:80/user/updateUser",
                     data: formData);
-                imageCache.clear();
-              }
-              if (result.data['message'] == "true") {
-                Get.snackbar("更新成功", "$_name",
-                    backgroundColor: Color.fromARGB(200, 255, 255, 255),
-                    duration: const Duration(seconds: 4));
-                _retrieveData();
+                if (result.data['message'] == "true") {
+                  Get.snackbar("更新成功", "$_name",
+                      backgroundColor: Color.fromARGB(200, 255, 255, 255),
+                      duration: const Duration(seconds: 4));
+                  _retrieveData();
+                }
+              } else {
+                result = await NetRequester.request(
+                    Apis.updateUsers(widget.account, _date, _name, _planet));
+                if (result['message'] == "true") {
+                  Get.snackbar("更新成功", "$_name",
+                      backgroundColor: Color.fromARGB(200, 255, 255, 255),
+                      duration: const Duration(seconds: 4));
+                  _retrieveData();
+                }
               }
             },
             child: Container(

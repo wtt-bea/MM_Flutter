@@ -5,6 +5,8 @@ import 'home_page.dart';
 import '../community/community_page.dart';
 import 'infochange_page.dart';
 import 'remind_page.dart';
+import '../music/music_page.dart';
+import '../letter/letter_page.dart';
 
 class ClockPage extends StatefulWidget {
   final account;
@@ -154,7 +156,14 @@ class _ClockPageState extends State<ClockPage> {
                 ],
               ),
               //助眠按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => MusicPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(
@@ -183,7 +192,14 @@ class _ClockPageState extends State<ClockPage> {
                 ],
               ),
               //信箱按钮
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => LetterPage(
+                              account: widget.account,
+                            )));
+              },
             ),
           ),
           SizedBox(
