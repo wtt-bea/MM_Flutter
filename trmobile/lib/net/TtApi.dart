@@ -114,4 +114,25 @@ class Apis {
   static String queryWeather(String planet) {
     return "/weather/weatherquery?planet=$planet";
   }
+
+  //写信
+  static String writeLetter(
+      String account, String stamp, String recipient, String context) {
+    return "/letter/insertLetter?account=$account&stamp=$stamp&recipient=$recipient&context=$context";
+  }
+
+  //查询用户的所有信
+  static String queryLetter(String recipient) {
+    return "/letter/queryLetter?recipient=$recipient";
+  }
+
+  //查询用户新获得的信
+  static String queryOneLetter(String account) {
+    return "/letter/queryOneLetter?account=$account";
+  }
+
+  //查询用户新获得的信
+  static String insertRecipien(int letter_id, String account) {
+    return "/letter/insertRecipient?letter_id=$letter_id&account=$account";
+  }
 }

@@ -142,7 +142,7 @@ class _MusicPlayerState extends State<MusicPlayer>
               Navigator.pop(context);
             },
             icon: Icon(const IconData(0xe8ef, fontFamily: "MyIcons"),
-                size: 25, color: _whiteColor),
+                size: 25, color: _blackColor),
           )
         ],
       ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../net/TtApi.dart';
 import '../../net/NetRequester.dart';
 import '../home/home_page.dart';
@@ -7,15 +6,15 @@ import '../music/music_page.dart';
 import '../community/community_page.dart';
 import '../letter/letter_page.dart';
 
-class ReadPage extends StatefulWidget {
+class DetialPage extends StatefulWidget {
   final account;
-  const ReadPage({super.key, required this.account});
+  const DetialPage({super.key, required this.account});
 
   @override
-  State<ReadPage> createState() => _ReadPageState();
+  State<DetialPage> createState() => _DetialPageState();
 }
 
-class _ReadPageState extends State<ReadPage> {
+class _DetialPageState extends State<DetialPage> {
   final Color _blackColor = const Color.fromARGB(255, 43, 46, 51);
   final Color _whiteColor = Colors.white;
   final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
@@ -24,12 +23,10 @@ class _ReadPageState extends State<ReadPage> {
   final List _weather = [60518, 60520, 60521, 60523, 60528, 58896];
   int _data = 0;
   int _temperature = 0;
-  List _letter = [];
-  bool _newLetter = false;
+
   @override
   initState() {
     super.initState();
-    _getLetter();
     _getData();
   }
 
@@ -42,10 +39,10 @@ class _ReadPageState extends State<ReadPage> {
         decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
+            end: Alignment.centerLeft,
             colors: [
-              Color.fromARGB(255, 254, 195, 209),
-              Color.fromARGB(255, 255, 249, 249),
+              Color.fromARGB(255, 253, 183, 200),
+              Colors.white,
             ],
           ),
         ),
@@ -61,7 +58,6 @@ class _ReadPageState extends State<ReadPage> {
                     _topNav(),
                   ],
                 )),
-            _letterView(context),
             _bottomNav(context),
           ],
         ),
@@ -69,7 +65,6 @@ class _ReadPageState extends State<ReadPage> {
     );
   }
 
-  //返回按钮
   Widget _topBackBar() {
     return SizedBox(
       width: 48,
@@ -179,70 +174,6 @@ class _ReadPageState extends State<ReadPage> {
               ],
             )),
       ]),
-    );
-  }
-
-  //信展示
-  Widget _letterView(context) {
-    return SizedBox(
-      height: 656,
-      width: 340,
-      child: SizedBox(
-        width: double.infinity,
-        height: double.infinity,
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            SizedBox(
-              height: 620,
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.builder(
-                  itemCount: _letter.length + 1,
-                  itemBuilder: (context, index) {
-                    if (_letter == []) {
-                      return Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const SizedBox(
-                          width: 24.0,
-                          height: 24.0,
-                          child: CircularProgressIndicator(strokeWidth: 2.0),
-                        ),
-                      );
-                    } else if (index == _letter.length) {
-                      return Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "没有啦 去写一封吧~",
-                          style: TextStyle(
-                              color: _blackColor,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w300),
-                        ),
-                      );
-                    } else {
-                      return _lettershow(index);
-                    }
-                  },
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _lettershow(index) {
-    return Container(
-      width: 340,
-      height: 170,
-      decoration:
-          const BoxDecoration(color: Color.fromARGB(255, 252, 253, 244)),
-      margin: const EdgeInsets.only(bottom: 20),
-      child: Column(children: [Text(_letter[index]["account"])]),
     );
   }
 
@@ -406,24 +337,6 @@ class _ReadPageState extends State<ReadPage> {
         ],
       ),
     );
-  }
-
-  void _getLetter() async {
-    String _recipient = widget.account;
-    var result1 = await NetRequester.request(Apis.queryOneLetter(_recipient));
-    if (result1["data"] != null) {
-      await NetRequester.request(
-          Apis.insertRecipien(result1["data"]["letter_id"], _recipient));
-      _newLetter = true;
-    }
-    // await NetRequester.request(Apis.writeLetter(_recipient, 3, "", "888"));
-    var data = await NetRequester.request(Apis.queryLetter(_recipient));
-    if (mounted) {
-      setState(() {
-        _letter = data["data"];
-        print(_letter);
-      });
-    }
   }
 
   void _getData() async {

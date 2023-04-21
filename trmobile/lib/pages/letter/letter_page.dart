@@ -4,6 +4,8 @@ import '../../net/TtApi.dart';
 import '../../net/NetRequester.dart';
 import '../home/home_page.dart';
 import '../music/music_page.dart';
+import 'read_page.dart';
+import 'write_page.dart';
 
 class LetterPage extends StatefulWidget {
   final account;
@@ -36,15 +38,30 @@ class _LetterPageState extends State<LetterPage> {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("lib/assets/images/letter_bg.jpg")),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.centerLeft,
+            colors: [
+              Color.fromARGB(255, 253, 183, 200),
+              Colors.white,
+            ],
+          ),
         ),
         child: Column(children: [
           const SizedBox(height: 40),
           _topNav(),
-          const SizedBox(height: 465),
+          const SizedBox(height: 65),
+          Container(
+            height: 300,
+            width: 350,
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage("lib/assets/images/letterbg.png")),
+            ),
+          ),
+          const SizedBox(height: 65),
           _btn(),
-          const SizedBox(height: 68),
+          const SizedBox(height: 104),
           _bottomNav(context),
         ]),
       ),
@@ -154,10 +171,19 @@ class _LetterPageState extends State<LetterPage> {
     return SizedBox(
       child: Column(children: [
         SizedBox(
-          width: 160,
+          width: 180,
           height: 40,
           child: OutlinedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ReadPage(
+                    account: widget.account,
+                  ),
+                ),
+              );
+            },
             style: OutlinedButton.styleFrom(
               backgroundColor: _blackColor,
               shape: RoundedRectangleBorder(
@@ -177,10 +203,19 @@ class _LetterPageState extends State<LetterPage> {
           height: 25,
         ),
         SizedBox(
-          width: 160,
+          width: 180,
           height: 40,
           child: OutlinedButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => WritePage(
+                    account: widget.account,
+                  ),
+                ),
+              );
+            },
             style: OutlinedButton.styleFrom(
               side: BorderSide(width: 1.0, color: _blackColor),
               backgroundColor: _whiteColor,
