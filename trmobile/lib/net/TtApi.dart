@@ -109,4 +109,9 @@ class Apis {
       String account, String date, String name, String planet) {
     return "/user/updateUsers?account=$account&date=$date&name=$name&planet=$planet";
   }
+
+  //查询天气
+  static String queryWeather(String planet) {
+    return "/weather/weatherquery?planet=$planet";
+  }
 }

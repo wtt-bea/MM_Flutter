@@ -19,6 +19,15 @@ class _LetterPageState extends State<LetterPage> {
   final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
   final _weeklist = [" ", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"];
   final List _dayIcon = [59137, 60517, 60539, 60533, 60530];
+  final List _weather = [60518, 60520, 60521, 60523, 60528, 58896];
+  int _data = 0;
+  int _temperature = 0;
+
+  @override
+  initState() {
+    super.initState();
+    _getData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +62,9 @@ class _LetterPageState extends State<LetterPage> {
     int week = dateTime.weekday;
     String _week = _weeklist[week];
     int _index = 0;
-    if ((_hour >= 6) && (_hour < 14)) {
+    if ((_hour >= 6) && (_hour <= 14)) {
       _index = 0;
-    } else if ((_hour >= 14) && (_hour < 17)) {
+    } else if ((_hour > 14) && (_hour < 17)) {
       _index = 1;
     } else if ((_hour >= 17) && (_hour < 21)) {
       _index = 2;
@@ -88,23 +97,29 @@ class _LetterPageState extends State<LetterPage> {
             child: Row(
               children: [
                 const SizedBox(width: 15),
-                //显示温度
+                //显示温度数字
                 SizedBox(
-                  child: Text("1",
-                      style: TextStyle(
-                          color: _whiteColor, fontWeight: FontWeight.w300)),
-                ),
-                SizedBox(
-                  child: Icon(
-                    const IconData(
-                      0xe6ce,
-                      fontFamily: "MyIcons",
-                    ),
-                    size: 17,
-                    color: _whiteColor,
+                  width: 33,
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        // width: 25,
+                        child: Text("$_temperature",
+                            style: TextStyle(
+                                color: _whiteColor,
+                                fontWeight: FontWeight.w300)),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 9),
+                        child: Icon(
+                          Icons.circle_outlined,
+                          size: 6,
+                          color: _whiteColor,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(width: 15),
                 //显示白天or晚上
                 SizedBox(
                   child: Icon(
@@ -112,19 +127,19 @@ class _LetterPageState extends State<LetterPage> {
                       _dayIcon[_index],
                       fontFamily: "MyIcons",
                     ),
-                    size: 17,
+                    size: 19,
                     color: _whiteColor,
                   ),
                 ),
-                const SizedBox(width: 15),
-                //显示温度
+                const SizedBox(width: 16),
+                //显示天气
                 SizedBox(
                   child: Icon(
-                    const IconData(
-                      0xec6e,
+                    IconData(
+                      _weather[_data],
                       fontFamily: "MyIcons",
                     ),
-                    size: 17,
+                    size: 19,
                     color: _whiteColor,
                   ),
                 ),
@@ -134,10 +149,9 @@ class _LetterPageState extends State<LetterPage> {
     );
   }
 
+  //检查信箱发送信件按钮
   Widget _btn() {
-    return Container(
-      // height: 150,
-      // decoration: BoxDecoration(color: Colors.brown),
+    return SizedBox(
       child: Column(children: [
         SizedBox(
           width: 160,
@@ -340,5 +354,18 @@ class _LetterPageState extends State<LetterPage> {
         ],
       ),
     );
+  }
+
+  void _getData() async {
+    String _account = widget.account;
+    var result = await NetRequester.request(Apis.planet(_account));
+    var data = await NetRequester.request(Apis.queryWeather(result["data"]));
+    if (mounted) {
+      setState(() {
+        _data = data["data"]["num"];
+        _temperature = data["data"]["temperature"];
+        // print(data);
+      });
+    }
   }
 }

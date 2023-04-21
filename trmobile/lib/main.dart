@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.grey),
       // home: LoginPage(),
-      home: LetterPage(account: "1"),
+      home: LetterPage(account: "7777777"),
     );
   }
 }
