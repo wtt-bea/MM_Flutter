@@ -210,7 +210,7 @@ class _MusicPageState extends State<MusicPage> {
     );
   }
 
-  //生成listview
+  //生成GridView
   Widget _contextShow(context) {
     return Container(
       height: 615,
@@ -233,7 +233,7 @@ class _MusicPageState extends State<MusicPage> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            Container(
+            SizedBox(
               height: 595,
               width: 318,
               child: flag_2

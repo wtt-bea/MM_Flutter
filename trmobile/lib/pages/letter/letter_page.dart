@@ -212,6 +212,8 @@ class _LetterPageState extends State<LetterPage> {
                 MaterialPageRoute(
                   builder: (context) => WritePage(
                     account: widget.account,
+                    recipient: "",
+                    name: "",
                   ),
                 ),
               );

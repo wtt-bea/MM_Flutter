@@ -275,8 +275,8 @@ class _LoginPageState extends State<LoginPage> {
             var currentDate = DateTime.now();
             var different = currentDate.difference(dateOfBirth).inDays + 1;
             Get.snackbar("成功登陆", "欢迎回家${user.name} 这是您来到漫漫宇宙的$different天",
-                backgroundColor: Color.fromARGB(200, 255, 255, 255),
-                duration: const Duration(seconds: 4));
+                backgroundColor: const Color.fromARGB(200, 255, 255, 255),
+                duration: const Duration(seconds: 3));
             Navigator.push(
               context,
               MaterialPageRoute(

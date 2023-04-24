@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
       title: '漫漫',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.grey),
-      // home: LoginPage(),
-      home: LetterPage(account: "1"),
+      home: LoginPage(),
     );
   }
 }

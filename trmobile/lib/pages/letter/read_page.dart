@@ -1,11 +1,15 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import '../../net/TtApi.dart';
 import '../../net/NetRequester.dart';
 import '../home/home_page.dart';
 import '../music/music_page.dart';
 import '../community/community_page.dart';
 import '../letter/letter_page.dart';
+import '../letter/detial_page.dart';
 
 class ReadPage extends StatefulWidget {
   final account;
@@ -212,15 +216,20 @@ class _ReadPageState extends State<ReadPage> {
                         ),
                       );
                     } else if (index == _letter.length) {
-                      return Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "没有啦 去写一封吧~",
-                          style: TextStyle(
-                              color: _blackColor,
-                              fontSize: 11,
-                              fontWeight: FontWeight.w300),
-                        ),
+                      return Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child: Text(
+                              "没有啦 去写一封吧~",
+                              style: TextStyle(
+                                  color: _blackColor,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                          const SizedBox(height: 15)
+                        ],
                       );
                     } else {
                       return _lettershow(index);
@@ -236,13 +245,106 @@ class _ReadPageState extends State<ReadPage> {
   }
 
   Widget _lettershow(index) {
+    String _date = _letter[index]["date"].substring(0, 16).replaceAll("-", ".");
     return Container(
       width: 340,
       height: 170,
       decoration:
-          const BoxDecoration(color: Color.fromARGB(255, 252, 253, 244)),
+          const BoxDecoration(color: Color.fromARGB(255, 254, 255, 248)),
       margin: const EdgeInsets.only(bottom: 20),
-      child: Column(children: [Text(_letter[index]["account"])]),
+      child: Row(children: [
+        SizedBox(
+          width: 220,
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              //发件人姓名
+              SizedBox(
+                width: 200,
+                child: Text("${_letter[index]["name"]}发",
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w400,
+                        color: _blackColor)),
+              ),
+              const SizedBox(height: 25),
+              //信件概要
+              SizedBox(
+                width: 200,
+                height: 80,
+                child: Text.rich(
+                  TextSpan(
+                      text: _letter[index]["context"],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w200,
+                        fontSize: 14,
+                        // decoration: TextDecoration.underline,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetialPage(
+                                        account: widget.account,
+                                        sender: _letter[index]["account"],
+                                        stamp: _letter[index]["stamp"],
+                                        context: _letter[index]["context"],
+                                        name: _letter[index]["name"],
+                                      )));
+                        }),
+                  maxLines: 3,
+                ),
+              ),
+              //新信件
+              if (_newLetter && index == 0)
+                Row(
+                  children: const [
+                    SizedBox(width: 10),
+                    Text("NEW!", style: TextStyle(color: Colors.red)),
+                  ],
+                )
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 120,
+          child: Column(
+            children: [
+              SizedBox(
+                height: 120,
+                width: 120,
+                child: Row(
+                  children: [
+                    const SizedBox(
+                      width: 25,
+                    ),
+                    Image.asset(
+                      "lib/assets/stamp/${_letter[index]["stamp"]}.png",
+                      fit: BoxFit.fill,
+                      width: 90,
+                      height: 100,
+                    )
+                  ],
+                ),
+              ),
+              //写信时间
+              SizedBox(
+                height: 50,
+                child: Row(children: [
+                  const SizedBox(width: 25),
+                  Text(
+                    _date,
+                    style: const TextStyle(
+                        fontSize: 12, fontWeight: FontWeight.w300),
+                  ),
+                ]),
+              )
+            ],
+          ),
+        )
+      ]),
     );
   }
 
@@ -415,6 +517,9 @@ class _ReadPageState extends State<ReadPage> {
       await NetRequester.request(
           Apis.insertRecipien(result1["data"]["letter_id"], _recipient));
       _newLetter = true;
+      Get.snackbar("您收到了新的信件", "快打开看看吧~",
+          backgroundColor: const Color.fromARGB(200, 255, 255, 255),
+          duration: const Duration(seconds: 3));
     }
     // await NetRequester.request(Apis.writeLetter(_recipient, 3, "", "888"));
     var data = await NetRequester.request(Apis.queryLetter(_recipient));

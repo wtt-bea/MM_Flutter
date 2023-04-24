@@ -5,10 +5,22 @@ import '../home/home_page.dart';
 import '../music/music_page.dart';
 import '../community/community_page.dart';
 import '../letter/letter_page.dart';
+import '../letter/write_page.dart';
 
 class DetialPage extends StatefulWidget {
   final account;
-  const DetialPage({super.key, required this.account});
+  final sender;
+  final stamp;
+  final context;
+  final name;
+  const DetialPage({
+    super.key,
+    required this.account,
+    required this.sender,
+    required this.stamp,
+    required this.context,
+    required this.name,
+  });
 
   @override
   State<DetialPage> createState() => _DetialPageState();
@@ -58,6 +70,10 @@ class _DetialPageState extends State<DetialPage> {
                     _topNav(),
                   ],
                 )),
+            const SizedBox(
+              height: 10,
+            ),
+            _letter(),
             _bottomNav(context),
           ],
         ),
@@ -333,6 +349,82 @@ class _DetialPageState extends State<DetialPage> {
                             )));
               },
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _letter() {
+    return Container(
+      height: 646,
+      width: 330,
+      decoration: BoxDecoration(
+          color: _whiteColor,
+          borderRadius: const BorderRadius.all(Radius.circular(5))),
+      child: Column(
+        children: [
+          const SizedBox(height: 25),
+          SizedBox(
+            child: Row(
+              children: [
+                const SizedBox(width: 10),
+                Text("From ${widget.name}"),
+              ],
+            ),
+          ),
+          const SizedBox(height: 15),
+          SizedBox(
+            height: 530,
+            width: 310,
+            child: Scrollbar(
+              child: SingleChildScrollView(
+                child: Text(
+                  widget.context,
+                  style: const TextStyle(
+                      height: 2,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      letterSpacing: 1,
+                      color: Color.fromARGB(255, 114, 114, 114)),
+                ),
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              const SizedBox(width: 250),
+              SizedBox(
+                height: 40,
+                width: 80,
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => WritePage(
+                                  account: widget.account,
+                                  recipient: widget.sender,
+                                  name: widget.name)));
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "去回复",
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: _blackColor),
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          size: 18,
+                          color: _blackColor,
+                        )
+                      ],
+                    )),
+              )
+            ],
           ),
         ],
       ),

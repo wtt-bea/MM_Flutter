@@ -588,7 +588,7 @@ class _RegistPageState extends State<RegistPage> {
                 if (result.data['message'] == "true") {
                   Get.snackbar("成功登陆", "欢迎回家$_name",
                       backgroundColor: Color.fromARGB(200, 255, 255, 255),
-                      duration: const Duration(seconds: 4));
+                      duration: const Duration(seconds: 3));
                   Navigator.push(
                       context,
                       MaterialPageRoute(

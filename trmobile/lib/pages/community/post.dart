@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:multi_image_picker_view/multi_image_picker_view.dart';
 import '../../net/TtApi.dart';
 import '../../net/NetRequester.dart';
@@ -179,6 +181,10 @@ class _PostPageState extends State<PostPage> {
                                 );
                               });
                         } else {
+                          Get.snackbar("发布成功", "又在漫漫宇宙留下了一些痕迹呢~",
+                              backgroundColor:
+                                  Color.fromARGB(200, 255, 255, 255),
+                              duration: const Duration(seconds: 3));
                           // ignore: use_build_context_synchronously
                           Navigator.push(
                             context,

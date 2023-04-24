@@ -5,10 +5,17 @@ import '../home/home_page.dart';
 import '../music/music_page.dart';
 import '../community/community_page.dart';
 import '../letter/letter_page.dart';
+import '../letter/stamp_page.dart';
 
 class WritePage extends StatefulWidget {
   final account;
-  const WritePage({super.key, required this.account});
+  final recipient;
+  final name;
+  const WritePage(
+      {super.key,
+      required this.account,
+      required this.recipient,
+      required this.name});
 
   @override
   State<WritePage> createState() => _WritePageState();
@@ -23,6 +30,7 @@ class _WritePageState extends State<WritePage> {
   final List _weather = [60518, 60520, 60521, 60523, 60528, 58896];
   int _data = 0;
   int _temperature = 0;
+  final TextEditingController _postText = TextEditingController();
 
   @override
   initState() {
@@ -31,8 +39,15 @@ class _WritePageState extends State<WritePage> {
   }
 
   @override
+  void dispose() {
+    _postText.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, //文字输入后缩放
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -58,6 +73,8 @@ class _WritePageState extends State<WritePage> {
                     _topNav(),
                   ],
                 )),
+            const SizedBox(height: 20),
+            _write(),
             _bottomNav(context),
           ],
         ),
@@ -174,6 +191,91 @@ class _WritePageState extends State<WritePage> {
               ],
             )),
       ]),
+    );
+  }
+
+  Widget _write() {
+    return Container(
+      height: 636,
+      width: 330,
+      decoration: BoxDecoration(
+          color: _whiteColor,
+          borderRadius: const BorderRadius.all(Radius.circular(5))),
+      child: Column(
+        children: [
+          const SizedBox(height: 25),
+          SizedBox(
+            child: Row(
+              children: [
+                const SizedBox(width: 15),
+                Text("To ${widget.recipient == "" ? "有缘人" : widget.name}"),
+              ],
+            ),
+          ),
+          const SizedBox(height: 15),
+          SizedBox(
+            height: 530,
+            width: 320,
+            //信输入框
+            child: TextField(
+              controller: _postText,
+              keyboardType: TextInputType.multiline,
+              maxLines: 35,
+              // minLines: 1,
+              decoration: const InputDecoration(
+                hintText: '写一封温柔的信吧....',
+                hintStyle: TextStyle(fontSize: 14, color: Colors.black26),
+                filled: true,
+                fillColor: Colors.transparent,
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                isDense: true,
+                border: InputBorder.none,
+              ),
+              style: const TextStyle(
+                  color: Color.fromARGB(255, 67, 67, 67),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w300),
+            ),
+          ),
+          Row(
+            children: [
+              const SizedBox(width: 235),
+              SizedBox(
+                height: 40,
+                width: 90,
+                child: TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => StampPage(
+                                    account: widget.account,
+                                    recipient: widget.recipient,
+                                    context: _postText.text,
+                                  )));
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          "选择邮票",
+                          style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                              color: _blackColor),
+                        ),
+                        Icon(
+                          Icons.arrow_forward,
+                          size: 18,
+                          color: _blackColor,
+                        )
+                      ],
+                    )),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 
