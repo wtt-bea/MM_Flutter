@@ -8,6 +8,7 @@ import 'infochange_page.dart';
 import 'clock_page.dart';
 import '../music/music_page.dart';
 import '../letter/letter_page.dart';
+import 'game_page.dart';
 
 class RemindPage extends StatefulWidget {
   final account;
@@ -53,7 +54,8 @@ class _RemindPageState extends State<RemindPage> {
               image: AssetImage("lib/assets/images/homebg.jpg")),
         ),
         child: Column(children: [
-          const SizedBox(height: 80),
+          const SizedBox(height: 45),
+          _game(context),
           _infoChange(context),
           const SizedBox(height: 10),
           _itemRemind(context),
@@ -231,6 +233,39 @@ class _RemindPageState extends State<RemindPage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  //小游戏按钮
+  Widget _game(context) {
+    return Container(
+      height: 35,
+      width: 110,
+      margin: const EdgeInsets.only(left: 260),
+      decoration: BoxDecoration(
+        color: const Color.fromARGB(40, 255, 255, 255),
+        border: Border.all(
+            color: const Color.fromARGB(255, 255, 255, 255),
+            width: 2), // border
+        borderRadius: const BorderRadius.horizontal(left: Radius.circular(5)),
+      ),
+      child: TextButton(
+        child: Text(
+          "小游戏",
+          style: TextStyle(
+              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+        ),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => GamePage(
+                account: widget.account,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

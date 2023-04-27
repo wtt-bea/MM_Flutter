@@ -135,4 +135,14 @@ class Apis {
   static String insertRecipien(int letter_id, String account) {
     return "/letter/insertRecipient?letter_id=$letter_id&account=$account";
   }
+
+  //查询用户最高分
+  static String queryScore(String account) {
+    return "/user/queryScore?&account=$account";
+  }
+
+  //更新用户最高分
+  static String updateScore(String account, int score) {
+    return "/user/updateScore?&account=$account&score=$score";
+  }
 }
