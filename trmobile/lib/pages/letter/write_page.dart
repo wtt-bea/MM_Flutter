@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import '../../net/TtApi.dart';
 import '../../net/NetRequester.dart';
 import '../home/home_page.dart';
@@ -246,14 +249,62 @@ class _WritePageState extends State<WritePage> {
                 width: 90,
                 child: TextButton(
                     onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => StampPage(
-                                    account: widget.account,
-                                    recipient: widget.recipient,
-                                    context: _postText.text,
-                                  )));
+                      if (_postText.text == "") {
+                        showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              // title: const Text(
+                              //   "登录提醒",
+                              //   style: TextStyle(
+                              //       fontSize: 16,
+                              //       color: Colors.black,
+                              //       fontWeight: FontWeight.w400),
+                              // ),
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15))),
+                              content: const Text(
+                                "请输入内容哦~",
+                                style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w300),
+                              ),
+                              actions: <Widget>[
+                                OutlinedButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  style: OutlinedButton.styleFrom(
+                                    side: const BorderSide(
+                                        width: 1.0, color: Colors.black),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    "确 认",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                )
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => StampPage(
+                                      account: widget.account,
+                                      recipient: widget.recipient,
+                                      context: _postText.text,
+                                    )));
+                      }
                     },
                     child: Row(
                       children: [

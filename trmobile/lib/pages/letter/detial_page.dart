@@ -45,6 +45,7 @@ class _DetialPageState extends State<DetialPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, //文字输入后缩放
       body: Container(
         width: double.infinity,
         height: double.infinity,

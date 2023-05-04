@@ -145,4 +145,19 @@ class Apis {
   static String updateScore(String account, int score) {
     return "/user/updateScore?&account=$account&score=$score";
   }
+
+  //查询用户积分
+  static String getPoint(String account) {
+    return "/user/getPoint?&account=$account";
+  }
+
+  //减用户积分
+  static String subPoint(String account, int point) {
+    return "/user/subPoint?&account=$account&point=$point";
+  }
+
+  //增用户积分
+  static String addPoint(String account, int point) {
+    return "/user/addPoint?&account=$account&point=$point";
+  }
 }

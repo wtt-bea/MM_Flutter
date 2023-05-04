@@ -34,6 +34,7 @@ class _LetterPageState extends State<LetterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, //文字输入后缩放
       body: Container(
         width: double.infinity,
         height: double.infinity,

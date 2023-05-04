@@ -67,7 +67,9 @@ class _GamePageState extends State<GamePage> {
       child: Row(
         children: [
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              await NetRequester.request(
+                  Apis.addPoint(widget.account, highestScore));
               Navigator.pop(context);
             },
             icon: const Icon(const IconData(0xe8ef, fontFamily: "MyIcons"),
@@ -102,6 +104,17 @@ class _GamePageState extends State<GamePage> {
               "获取到2048分视为游戏胜利",
               style: TextStyle(
                   fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  color: Color.fromARGB(255, 123, 115, 87)),
+            ),
+          ),
+          SizedBox(height: 5),
+          SizedBox(
+            width: 220,
+            child: Text(
+              "刷新最高分也能获取积分",
+              style: TextStyle(
+                  fontSize: 10,
                   fontWeight: FontWeight.w400,
                   color: Color.fromARGB(255, 123, 115, 87)),
             ),

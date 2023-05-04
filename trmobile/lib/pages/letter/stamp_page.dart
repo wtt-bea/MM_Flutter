@@ -35,10 +35,19 @@ class _StampPageState extends State<StampPage> {
     "G",
     "H",
   ];
+  final List _cost = [500, 1000, 2000, 3000, 4000, 5000, 6000, 7000];
   var _flag;
+  var point;
+  @override
+  initState() {
+    super.initState();
+    _getData();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false, //文字输入后缩放
       body: Container(
         width: double.infinity,
         height: double.infinity,
@@ -61,7 +70,7 @@ class _StampPageState extends State<StampPage> {
               ],
             ),
             _showStamp(),
-            _weitrBtn()
+            _writeBtn()
           ],
         ),
       ),
@@ -104,17 +113,39 @@ class _StampPageState extends State<StampPage> {
                 ),
               ),
               child: TextButton(
-                child: Row(children: [
-                  if (_flag == index)
-                    Container(
-                      margin: const EdgeInsets.only(left: 50),
-                      child: const Icon(
-                        Icons.check_rounded,
-                        size: 40,
-                        color: Color.fromARGB(255, 80, 76, 76),
-                      ),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 10,
                     ),
-                ]),
+                    Row(
+                      children: [
+                        const SizedBox(width: 100),
+                        Text(
+                          "${_cost[index]}",
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 80, 76, 76)),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    if (_flag == index)
+                      Row(
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 50),
+                            child: const Icon(
+                              Icons.check_rounded,
+                              size: 40,
+                              color: Color.fromARGB(255, 80, 76, 76),
+                            ),
+                          ),
+                        ],
+                      )
+                  ],
+                ),
                 onPressed: () {
                   if (mounted) {
                     setState(() {
@@ -128,37 +159,161 @@ class _StampPageState extends State<StampPage> {
     );
   }
 
-  Widget _weitrBtn() {
+  Widget _writeBtn() {
     return Row(
       children: [
-        const SizedBox(width: 285),
+        const SizedBox(width: 25),
+        SizedBox(
+          width: 120,
+          child: Text("可用积分：$point"),
+        ),
+        const SizedBox(width: 145),
         SizedBox(
           height: 40,
           width: 70,
           child: TextButton(
               onPressed: () async {
-                var result = await NetRequester.request(Apis.writeLetter(
-                        widget.account,
-                        _stamp[_flag],
-                        widget.recipient,
-                        widget.context))
-                    .then((value) => {
-                          if (value["message"] == "true")
-                            {
-                              Get.snackbar("投递成功", "希望你的信能温暖到别人",
-                                  backgroundColor:
-                                      const Color.fromARGB(200, 255, 255, 255),
-                                  duration: const Duration(seconds: 3)),
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => LetterPage(
-                                    account: widget.account,
-                                  ),
-                                ),
-                              )
-                            }
-                        });
+                if (point < _cost[_flag]) {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        title: const Text(
+                          "您的积分不足",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        content: const Text(
+                          "可通过每日打卡、签到获取",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        actions: <Widget>[
+                          OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.black),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              "确 认",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  );
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        title: const Text(
+                          "请确认",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        content: Text(
+                          "要花费${_cost[_flag]}积分",
+                          style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        actions: <Widget>[
+                          OutlinedButton(
+                            onPressed: () async {
+                              Navigator.of(context).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.black),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              "取 消",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          ),
+                          OutlinedButton(
+                            onPressed: () async {
+                              await NetRequester.request(Apis.writeLetter(
+                                      widget.account,
+                                      _stamp[_flag],
+                                      widget.recipient,
+                                      widget.context))
+                                  .then((value) async => {
+                                        if (value["message"] == "true")
+                                          {
+                                            await NetRequester.request(
+                                                Apis.subPoint(
+                                              widget.account,
+                                              _cost[_flag],
+                                            )),
+                                            Get.snackbar("投递成功", "希望你的信能温暖到别人",
+                                                backgroundColor:
+                                                    const Color.fromARGB(
+                                                        200, 255, 255, 255),
+                                                duration:
+                                                    const Duration(seconds: 3)),
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    LetterPage(
+                                                  account: widget.account,
+                                                ),
+                                              ),
+                                            )
+                                          }
+                                      });
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.black),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              "确 认",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  );
+                }
               },
               child: Row(
                 children: [
@@ -179,5 +334,14 @@ class _StampPageState extends State<StampPage> {
         )
       ],
     );
+  }
+
+  void _getData() async {
+    var result = await NetRequester.request(Apis.getPoint(widget.account));
+    if (mounted) {
+      setState(() {
+        point = result["data"];
+      });
+    }
   }
 }

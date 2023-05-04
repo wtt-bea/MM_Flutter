@@ -455,9 +455,57 @@ class _ClockPageState extends State<ClockPage> {
                           fontWeight: FontWeight.w400,
                           fontSize: 14),
                     ),
-              onPressed: () {
+              onPressed: () async {
                 if (_isClock == false) {
                   _sentisClock();
+                  await NetRequester.request(
+                      Apis.addPoint(widget.account, 1000));
+                  // ignore: use_build_context_synchronously
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        title: const Text(
+                          "积分增加",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        content: const Text(
+                          "恭喜您获得1000积分",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        actions: <Widget>[
+                          OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.black),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              "确 认",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          )
+                        ],
+                      );
+                    },
+                  );
                 }
               },
             ),
