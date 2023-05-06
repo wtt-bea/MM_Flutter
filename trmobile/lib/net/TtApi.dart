@@ -160,4 +160,9 @@ class Apis {
   static String addPoint(String account, int point) {
     return "/user/addPoint?&account=$account&point=$point";
   }
+
+  //搜索
+  static String search(String context) {
+    return "/post/postSearch?&context=$context";
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'dart:io';
 import 'package:flutter/gestures.dart';
@@ -40,6 +41,8 @@ class _CommunityPageState extends State<CommunityPage> {
 
   String _planet = "焦虑星";
 
+  int _searchflag = 0;
+
   @override
   initState() {
     super.initState();
@@ -49,7 +52,7 @@ class _CommunityPageState extends State<CommunityPage> {
   }
 
   final GlobalKey _formKey = GlobalKey<FormState>();
-  // late String _searchContext = "";
+  late String _searchContext = "";
 
   @override
   Widget build(BuildContext context) {
@@ -369,110 +372,129 @@ class _CommunityPageState extends State<CommunityPage> {
     );
   }
 
-  // //搜索bar
-  // Widget _searchBar(context) {
-  //   return Container(
-  //     margin: const EdgeInsets.only(bottom: 10),
-  //     width: 320,
-  //     height: 35,
-  //     child: Row(
-  //       children: [
-  //         SizedBox(
-  //           width: 255,
-  //           height: 35,
-  //           child: Form(
-  //             key: _formKey,
-  //             autovalidateMode: AutovalidateMode.onUserInteraction,
-  //             child: Container(
-  //                 decoration: const BoxDecoration(
-  //                   borderRadius: BorderRadius.only(
-  //                       topLeft: Radius.circular(20),
-  //                       bottomLeft: Radius.circular(20)),
-  //                   color: Color.fromARGB(20, 250, 123, 155),
-  //                 ),
-  //                 child: Row(
-  //                   children: [
-  //                     const SizedBox(
-  //                       width: 10,
-  //                     ),
-  //                     const SizedBox(
-  //                       width: 20,
-  //                       child: Icon(
-  //                         IconData(
-  //                           0xe632,
-  //                           fontFamily: "MyIcons",
-  //                         ),
-  //                         size: 20,
-  //                         color: Color.fromARGB(200, 53, 53, 53),
-  //                       ),
-  //                     ),
-  //                     const SizedBox(
-  //                       width: 5,
-  //                     ),
-  //                     SizedBox(
-  //                       width: 200,
-  //                       height: 35,
-  //                       child: TextFormField(
-  //                         decoration: const InputDecoration(
-  //                           border: InputBorder.none,
-  //                           hintText: '搜索你感兴趣的东西',
-  //                           hintStyle: TextStyle(
-  //                               color: Color.fromARGB(146, 53, 53, 53),
-  //                               fontSize: 13,
-  //                               fontWeight: FontWeight.w300),
-  //                         ),
-  //                         //输入后字体
-  //                         style: const TextStyle(
-  //                             color: Color.fromARGB(255, 43, 46, 51),
-  //                             fontSize: 14,
-  //                             fontWeight: FontWeight.w300),
-  //                         cursorColor: const Color.fromARGB(255, 43, 46, 51),
-  //                         // cursorRadius: const Radius.circular(5),
-  //                         cursorHeight: 20,
-  //                         onSaved: (v) => _searchContext = v!,
-  //                       ),
-  //                     )
-  //                   ],
-  //                 )),
-  //           ),
-  //         ),
-  //         const SizedBox(
-  //           width: 5,
-  //         ),
-  //         SizedBox(
-  //           width: 60,
-  //           height: 35,
-  //           child: Container(
-  //             width: 55,
-  //             height: 35,
-  //             decoration: const BoxDecoration(
-  //               borderRadius: BorderRadius.only(
-  //                   topRight: Radius.circular(20),
-  //                   bottomRight: Radius.circular(20)),
-  //               color: Color.fromARGB(60, 234, 101, 134),
-  //             ),
-  //             child: TextButton(
-  //               style: ButtonStyle(
-  //                 overlayColor: MaterialStateProperty.all(Colors.transparent),
-  //                 shape: MaterialStateProperty.all(RoundedRectangleBorder(
-  //                     borderRadius: BorderRadius.circular(20))),
-  //               ),
-  //               //搜索按钮
-  //               onPressed: () {},
-  //               child: const Text(
-  //                 "搜索",
-  //                 style: TextStyle(
-  //                     color: Color.fromARGB(200, 53, 53, 53),
-  //                     fontSize: 13,
-  //                     fontWeight: FontWeight.w400),
-  //               ),
-  //             ),
-  //           ),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
+  //搜索bar
+  Widget _searchBar(context) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      width: 320,
+      height: 35,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 255,
+            height: 35,
+            child: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: Container(
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        bottomLeft: Radius.circular(20)),
+                    color: Color.fromARGB(20, 250, 123, 155),
+                  ),
+                  child: Row(
+                    children: [
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      const SizedBox(
+                        width: 20,
+                        child: Icon(
+                          IconData(
+                            0xe632,
+                            fontFamily: "MyIcons",
+                          ),
+                          size: 20,
+                          color: Color.fromARGB(200, 53, 53, 53),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 5,
+                      ),
+                      SizedBox(
+                        width: 200,
+                        height: 35,
+                        child: TextFormField(
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '搜索你感兴趣的东西',
+                            hintStyle: TextStyle(
+                                color: Color.fromARGB(146, 53, 53, 53),
+                                fontSize: 13,
+                                fontWeight: FontWeight.w300),
+                          ),
+                          //输入后字体
+                          style: const TextStyle(
+                              color: Color.fromARGB(255, 43, 46, 51),
+                              fontSize: 14,
+                              fontWeight: FontWeight.w300),
+                          cursorColor: const Color.fromARGB(255, 43, 46, 51),
+                          // cursorRadius: const Radius.circular(5),
+                          cursorHeight: 20,
+                          onSaved: (v) => _searchContext = v!,
+                        ),
+                      )
+                    ],
+                  )),
+            ),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          SizedBox(
+            width: 60,
+            height: 35,
+            child: Container(
+              width: 55,
+              height: 35,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
+                color: Color.fromARGB(60, 234, 101, 134),
+              ),
+              child: TextButton(
+                style: ButtonStyle(
+                  overlayColor: MaterialStateProperty.all(Colors.transparent),
+                  shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20))),
+                ),
+                //搜索按钮
+                onPressed: () {
+                  (_formKey.currentState as FormState).save();
+                  if (mounted) {
+                    setState(() {
+                      _searchflag = 1;
+                    });
+                  }
+                  SystemChannels.textInput.invokeMethod<void>('TextInput.hide');
+                  var result1;
+                  var result2;
+                  Future.delayed(
+                      Duration(seconds: 1),
+                      () async => {
+                            result1 = await NetRequester.request(
+                                Apis.search(_searchContext)),
+                            result2 =
+                                await NetRequester.request(Apis.queryImage()),
+                          }).then((value) => {picbuilder(result1, result2)});
+                  _getLike();
+                },
+                child: const Text(
+                  "搜索",
+                  style: TextStyle(
+                      color: Color.fromARGB(200, 53, 53, 53),
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
 
   //生成listview
   Widget _contextShow(context) {
@@ -500,53 +522,101 @@ class _CommunityPageState extends State<CommunityPage> {
           children: [
             const SizedBox(height: 10),
             //搜索bar
-            // _searchBar(context),
-            SizedBox(
-              height: 595,
-              child: MediaQuery.removePadding(
-                context: context,
-                removeTop: true,
-                child: ListView.separated(
-                  itemCount: _words.length + 1,
-                  itemBuilder: (context, index) {
-                    if (_words == []) {
-                      return Container(
-                        padding: const EdgeInsets.all(16.0),
-                        alignment: Alignment.center,
-                        child: const SizedBox(
-                          width: 24.0,
-                          height: 24.0,
-                          child: CircularProgressIndicator(strokeWidth: 2.0),
-                        ),
-                      );
-                    } else if (index == _words.length) {
-                      // 加载完成
-                      return Container(
-                        alignment: Alignment.center,
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: const [
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "- The End -",
-                              style: TextStyle(
-                                  color: Colors.black26, fontSize: 11),
-                            ),
-                          ],
-                        ),
-                      );
-                    } else {
-                      //社区内容现实列表
-                      return _postShow(index);
-                    }
-                  },
-                  separatorBuilder: (context, index) =>
-                      const Divider(height: .0),
+            _searchBar(context),
+            if (_searchflag == 0)
+              SizedBox(
+                height: 545,
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView.separated(
+                    itemCount: _words.length + 1,
+                    itemBuilder: (context, index) {
+                      if (_words == []) {
+                        return Container(
+                          padding: const EdgeInsets.all(16.0),
+                          alignment: Alignment.center,
+                          child: const SizedBox(
+                            width: 24.0,
+                            height: 24.0,
+                            child: CircularProgressIndicator(strokeWidth: 2.0),
+                          ),
+                        );
+                      } else if (index == _words.length) {
+                        // 加载完成
+                        return Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: const [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "- The End -",
+                                style: TextStyle(
+                                    color: Colors.black26, fontSize: 11),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        //社区内容现实列表
+                        return _postShow(index);
+                      }
+                    },
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: .0),
+                  ),
                 ),
               ),
-            ),
+            if (_searchflag == 1)
+              SizedBox(
+                height: 545,
+                child: MediaQuery.removePadding(
+                  context: context,
+                  removeTop: true,
+                  child: ListView.separated(
+                    itemCount: _words.length + 1,
+                    itemBuilder: (context, index) {
+                      if (_words == []) {
+                        return Container(
+                          padding: const EdgeInsets.all(16.0),
+                          alignment: Alignment.center,
+                          child: const SizedBox(
+                            width: 24.0,
+                            height: 24.0,
+                            child: CircularProgressIndicator(strokeWidth: 2.0),
+                          ),
+                        );
+                      } else if (index == _words.length) {
+                        // 加载完成
+                        return Container(
+                          alignment: Alignment.center,
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: const [
+                              SizedBox(
+                                height: 5,
+                              ),
+                              Text(
+                                "- The End -",
+                                style: TextStyle(
+                                    color: Colors.black26, fontSize: 11),
+                              ),
+                            ],
+                          ),
+                        );
+                      } else {
+                        //社区内容现实列表
+                        return _postShow(index);
+                      }
+                    },
+                    separatorBuilder: (context, index) =>
+                        const Divider(height: .0),
+                  ),
+                ),
+              ),
           ],
         ),
       ),
