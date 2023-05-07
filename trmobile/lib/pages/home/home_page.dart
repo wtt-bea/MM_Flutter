@@ -49,18 +49,45 @@ class _HomePageState extends State<HomePage> {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("lib/assets/images/homebg.jpg")),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.centerLeft,
+            colors: [
+              Color.fromARGB(255, 253, 183, 200),
+              Colors.white,
+            ],
+          ),
         ),
         child: Column(children: [
-          const SizedBox(height: 45),
-          _game(context),
-          _infoChange(context),
-          const SizedBox(height: 10),
-          _itemRemind(context),
-          const SizedBox(height: 10),
-          _dailyCheckins(context),
-          const SizedBox(height: 25),
+          const SizedBox(height: 72),
+          Row(
+            children: [
+              Column(
+                children: [
+                  _infoChange(context),
+                  const SizedBox(height: 10),
+                  _itemRemind(context),
+                  const SizedBox(height: 10),
+                  _dailyCheckins(context),
+                  const SizedBox(height: 25),
+                ],
+              ),
+              Column(
+                children: [
+                  _avatar(),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  const SizedBox(height: 45),
+                  _game(context),
+                ],
+              ),
+            ],
+          ),
           Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -234,20 +261,18 @@ class _HomePageState extends State<HomePage> {
   Widget _infoChange(context) {
     return Container(
       height: 35,
-      width: 110,
-      margin: const EdgeInsets.only(right: 260),
+      width: 90,
+      margin: const EdgeInsets.only(right: 40),
       decoration: BoxDecoration(
         color: const Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            width: 2), // border
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: const BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "信息更改",
           style: TextStyle(
-              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {
           Navigator.push(
@@ -267,20 +292,18 @@ class _HomePageState extends State<HomePage> {
   Widget _game(context) {
     return Container(
       height: 35,
-      width: 110,
-      margin: const EdgeInsets.only(left: 260),
+      width: 90,
+      margin: const EdgeInsets.only(left: 40),
       decoration: BoxDecoration(
         color: const Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            width: 2), // border
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: const BorderRadius.horizontal(left: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "小游戏",
           style: TextStyle(
-              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {
           Navigator.push(
@@ -300,19 +323,18 @@ class _HomePageState extends State<HomePage> {
   Widget _itemRemind(context) {
     return Container(
       height: 35,
-      width: 130,
-      margin: EdgeInsets.only(right: 280),
+      width: 100,
+      margin: EdgeInsets.only(right: 30),
       decoration: BoxDecoration(
         color: Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(
-            color: Color.fromARGB(255, 255, 255, 255), width: 2), // border
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "事项提醒",
           style: TextStyle(
-              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {
           Navigator.push(
@@ -332,19 +354,18 @@ class _HomePageState extends State<HomePage> {
   Widget _dailyCheckins(context) {
     return Container(
       height: 35,
-      width: 130,
-      margin: EdgeInsets.only(right: 265),
+      width: 90,
+      margin: EdgeInsets.only(right: 40),
       decoration: BoxDecoration(
         color: Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(
-            color: Color.fromARGB(255, 255, 255, 255), width: 2), // border
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "每日打卡",
           style: TextStyle(
-              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {
           Navigator.push(
@@ -358,6 +379,26 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
+  }
+
+  //头像显示
+  Widget _avatar() {
+    return SizedBox(
+        height: 100,
+        width: 100,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 100,
+              width: 100,
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    "http://172.20.10.5/images/${widget.account}.png?$imgKey"),
+                key: imgKey,
+              ),
+            ),
+          ],
+        ));
   }
 
   //个人主页生成
@@ -383,8 +424,6 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             const SizedBox(height: 10),
-            //搜索bar
-            // _searchBar(context),
             SizedBox(
               height: 455,
               child: MediaQuery.removePadding(

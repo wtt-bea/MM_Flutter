@@ -30,6 +30,7 @@ class _RemindPageState extends State<RemindPage> {
   var _context = "";
   TextEditingController _textcontroller = TextEditingController();
   bool keyboard = false; //键盘的弹起、收回状态
+  var imgKey = UniqueKey();
   @override
   initState() {
     super.initState();
@@ -50,18 +51,45 @@ class _RemindPageState extends State<RemindPage> {
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-          image: DecorationImage(
-              image: AssetImage("lib/assets/images/homebg.jpg")),
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.centerLeft,
+            colors: [
+              Color.fromARGB(255, 253, 183, 200),
+              Colors.white,
+            ],
+          ),
         ),
         child: Column(children: [
-          const SizedBox(height: 45),
-          _game(context),
-          _infoChange(context),
-          const SizedBox(height: 10),
-          _itemRemind(context),
-          const SizedBox(height: 10),
-          _dailyCheckins(context),
-          const SizedBox(height: 25),
+          const SizedBox(height: 72),
+          Row(
+            children: [
+              Column(
+                children: [
+                  _infoChange(context),
+                  const SizedBox(height: 10),
+                  _itemRemind(context),
+                  const SizedBox(height: 10),
+                  _dailyCheckins(context),
+                  const SizedBox(height: 25),
+                ],
+              ),
+              Column(
+                children: [
+                  _avatar(),
+                  const SizedBox(
+                    height: 50,
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  const SizedBox(height: 45),
+                  _game(context),
+                ],
+              ),
+            ],
+          ),
           Stack(
             alignment: Alignment.bottomCenter,
             children: [
@@ -73,6 +101,26 @@ class _RemindPageState extends State<RemindPage> {
         ]),
       ),
     );
+  }
+
+  //头像显示
+  Widget _avatar() {
+    return SizedBox(
+        height: 100,
+        width: 100,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 100,
+              width: 100,
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    "http://172.20.10.5/images/${widget.account}.png?$imgKey"),
+                key: imgKey,
+              ),
+            ),
+          ],
+        ));
   }
 
   //底部导航栏
@@ -241,20 +289,18 @@ class _RemindPageState extends State<RemindPage> {
   Widget _game(context) {
     return Container(
       height: 35,
-      width: 110,
-      margin: const EdgeInsets.only(left: 260),
+      width: 90,
+      margin: const EdgeInsets.only(left: 40),
       decoration: BoxDecoration(
         color: const Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(
-            color: const Color.fromARGB(255, 255, 255, 255),
-            width: 2), // border
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: const BorderRadius.horizontal(left: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "小游戏",
           style: TextStyle(
-              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {
           Navigator.push(
@@ -274,18 +320,18 @@ class _RemindPageState extends State<RemindPage> {
   Widget _infoChange(context) {
     return Container(
       height: 35,
-      width: 130,
-      margin: EdgeInsets.only(right: 260),
+      width: 90,
+      margin: const EdgeInsets.only(right: 40),
       decoration: BoxDecoration(
-        color: Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(color: _whiteColor, width: 2), // border
+        color: const Color.fromARGB(40, 255, 255, 255),
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "信息更改",
           style: TextStyle(
-              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {
           Navigator.push(
@@ -303,18 +349,18 @@ class _RemindPageState extends State<RemindPage> {
   Widget _itemRemind(context) {
     return Container(
       height: 35,
-      width: 130,
-      margin: EdgeInsets.only(right: 240),
+      width: 115,
+      margin: EdgeInsets.only(right: 15),
       decoration: BoxDecoration(
-        color: Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(color: _pinkColor, width: 2), // border
+        color: const Color.fromARGB(200, 255, 255, 255),
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "事项提醒",
           style: TextStyle(
-              color: _pinkColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {},
       ),
@@ -325,19 +371,18 @@ class _RemindPageState extends State<RemindPage> {
   Widget _dailyCheckins(context) {
     return Container(
       height: 35,
-      width: 130,
-      margin: EdgeInsets.only(right: 265),
+      width: 90,
+      margin: EdgeInsets.only(right: 40),
       decoration: BoxDecoration(
         color: Color.fromARGB(40, 255, 255, 255),
-        border: Border.all(
-            color: Color.fromARGB(255, 255, 255, 255), width: 2), // border
+        border: Border.all(color: _blackColor, width: 2), // border
         borderRadius: BorderRadius.horizontal(right: Radius.circular(5)),
       ),
       child: TextButton(
         child: Text(
           "每日打卡",
           style: TextStyle(
-              color: _whiteColor, fontWeight: FontWeight.w400, fontSize: 13),
+              color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
         onPressed: () {
           Navigator.push(
@@ -523,16 +568,18 @@ class _RemindPageState extends State<RemindPage> {
 
   Widget _bottomInput(context) {
     double height = MediaQuery.of(context).padding.bottom;
+
     return Offstage(
       offstage: !keyboard,
       child: Container(
           width: double.infinity,
+          transform: Matrix4.translationValues(0.0, 10, 0.0),
           child: Column(
             children: [
               Container(
                 height: 1,
-                decoration:
-                    BoxDecoration(color: Color.fromARGB(255, 233, 233, 233)),
+                decoration: const BoxDecoration(
+                    color: Color.fromARGB(255, 233, 233, 233)),
                 padding: EdgeInsets.only(bottom: height),
               ),
               AnimatedPadding(
@@ -542,7 +589,7 @@ class _RemindPageState extends State<RemindPage> {
                 child: Container(
                   color: Colors.white, //评论位置颜色
                   //距离底部边界距离，这个是为了适配全面屏的，keyboard，bool类型，代表键盘的弹起和收回。true谈起，false收回，这个值怎么获取下面会有提到。
-                  child: Container(
+                  child: SizedBox(
                     height: 50, //设置输入框谈起和收回时的高度
                     width: double.infinity, //设置宽度
                     //控件横向排版弹性布局
@@ -551,9 +598,9 @@ class _RemindPageState extends State<RemindPage> {
                         Container(
                           height: 40,
                           width: 295,
-                          margin: EdgeInsets.only(left: 20),
-                          padding:
-                              EdgeInsets.only(left: 15, bottom: 2, right: 15),
+                          margin: const EdgeInsets.only(left: 20),
+                          padding: const EdgeInsets.only(
+                              left: 15, bottom: 2, right: 15),
                           decoration: BoxDecoration(
                               //设置边框、圆角效果
                               color: Colors.white,
@@ -576,7 +623,7 @@ class _RemindPageState extends State<RemindPage> {
                                 //设置提示内容，字体颜色、大小等
                                 border: InputBorder.none,
                                 hintText: "请输入提醒事项",
-                                hintStyle: const TextStyle(
+                                hintStyle: TextStyle(
                                   fontSize: 13,
                                   color: Colors.black26,
                                 ),

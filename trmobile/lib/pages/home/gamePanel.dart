@@ -12,6 +12,10 @@ class Game2048Panel extends StatefulWidget {
 }
 
 class Game2048PanelState extends State<Game2048Panel> {
+  final Color _blackColor = const Color.fromARGB(255, 43, 46, 51);
+  final Color _whiteColor = Colors.white;
+  final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
+
   /// 每行每列的个数
   static const int SIZE = 4;
 
@@ -20,18 +24,18 @@ class Game2048PanelState extends State<Game2048Panel> {
   final List _gameMap =
       List.generate(SIZE, (_) => List<int>.generate(SIZE, (_) => 0));
   final Map<int, Color> _mapValueToColor = {
-    0: Color.fromARGB(255, 189, 175, 153),
-    2: Color.fromARGB(255, 234, 227, 214),
-    4: Color.fromARGB(255, 227, 217, 190),
-    8: Color.fromARGB(255, 242, 177, 121),
-    16: Color.fromARGB(255, 245, 149, 99),
-    32: Color.fromARGB(255, 246, 124, 95),
-    64: const Color.fromARGB(255, 246, 95, 64),
-    128: const Color.fromARGB(255, 235, 208, 117),
-    256: const Color.fromARGB(255, 237, 203, 103),
-    512: const Color.fromARGB(255, 236, 201, 85),
-    1024: const Color.fromARGB(255, 229, 194, 90),
-    2048: const Color.fromARGB(255, 232, 192, 70),
+    0: Color.fromARGB(255, 249, 225, 232),
+    2: Color.fromARGB(255, 255, 208, 223),
+    4: Color.fromARGB(255, 198, 155, 184),
+    8: Color.fromARGB(255, 255, 108, 137),
+    16: Color.fromARGB(255, 192, 127, 174),
+    32: Color.fromARGB(255, 160, 115, 153),
+    64: Color.fromARGB(255, 244, 59, 133),
+    128: Color.fromARGB(255, 245, 116, 163),
+    256: Color.fromARGB(255, 199, 86, 137),
+    512: Color.fromARGB(255, 207, 71, 91),
+    1024: Color.fromARGB(255, 207, 68, 68),
+    2048: Color.fromARGB(255, 151, 10, 10),
   };
 
   //左右方向的偏移应该小于这个阈值
@@ -159,7 +163,7 @@ class Game2048PanelState extends State<Game2048Panel> {
           padding: const EdgeInsets.only(top: 10, left: 10),
           decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(10)),
-            color: Color.fromARGB(255, 170, 158, 138),
+            color: Color.fromARGB(255, 212, 186, 197),
           ),
           margin: const EdgeInsets.all(5),
           child: MediaQuery.removePadding(
@@ -199,7 +203,7 @@ class Game2048PanelState extends State<Game2048Panel> {
               fontSize: 27,
               fontWeight: FontWeight.w600,
               color: Color.fromARGB(
-                  255, 130, 119, 103)), // 如果数字是0，展示空字符串，效果上就是空格，否则展示数字
+                  255, 255, 255, 255)), // 如果数字是0，展示空字符串，效果上就是空格，否则展示数字
         ),
       ),
     );

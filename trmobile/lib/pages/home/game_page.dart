@@ -13,6 +13,9 @@ class GamePage extends StatefulWidget {
 
 class _GamePageState extends State<GamePage> {
   final GlobalKey _gamePanelKey = GlobalKey<Game2048PanelState>();
+  final Color _blackColor = const Color.fromARGB(255, 43, 46, 51);
+  final Color _whiteColor = Colors.white;
+  final Color _pinkColor = const Color.fromARGB(255, 253, 183, 200);
   @override
   initState() {
     super.initState();
@@ -25,7 +28,16 @@ class _GamePageState extends State<GamePage> {
       extendBodyBehindAppBar: true,
       body: Container(
           padding: const EdgeInsets.only(top: 30),
-          color: const Color.fromARGB(255, 235, 230, 220),
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topRight,
+              end: Alignment.centerLeft,
+              colors: [
+                Color.fromARGB(255, 253, 183, 200),
+                Colors.white,
+              ],
+            ),
+          ),
           child: Column(
             children: [
               Row(
@@ -72,8 +84,8 @@ class _GamePageState extends State<GamePage> {
                   Apis.addPoint(widget.account, highestScore));
               Navigator.pop(context);
             },
-            icon: const Icon(const IconData(0xe8ef, fontFamily: "MyIcons"),
-                size: 25, color: Colors.black),
+            icon: Icon(const IconData(0xe8ef, fontFamily: "MyIcons"),
+                size: 25, color: _blackColor),
           )
         ],
       ),
@@ -86,7 +98,7 @@ class _GamePageState extends State<GamePage> {
         width: 20,
       ),
       Column(
-        children: const [
+        children: [
           SizedBox(
             width: 220,
             child: Text(
@@ -94,10 +106,10 @@ class _GamePageState extends State<GamePage> {
               style: TextStyle(
                   fontSize: 57,
                   fontWeight: FontWeight.w700,
-                  color: Color.fromARGB(255, 123, 115, 87)),
+                  color: _blackColor),
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           SizedBox(
             width: 220,
             child: Text(
@@ -105,10 +117,10 @@ class _GamePageState extends State<GamePage> {
               style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w400,
-                  color: Color.fromARGB(255, 123, 115, 87)),
+                  color: _blackColor),
             ),
           ),
-          SizedBox(height: 5),
+          const SizedBox(height: 5),
           SizedBox(
             width: 220,
             child: Text(
@@ -116,7 +128,7 @@ class _GamePageState extends State<GamePage> {
               style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w400,
-                  color: Color.fromARGB(255, 123, 115, 87)),
+                  color: _blackColor),
             ),
           ),
         ],
@@ -129,22 +141,22 @@ class _GamePageState extends State<GamePage> {
           width: 100,
           height: 60,
           decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 189, 175, 153),
+              color: Color.fromARGB(255, 198, 155, 184),
               borderRadius: BorderRadius.all(Radius.circular(5))),
           child: Center(
             child: Column(
               children: [
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   "分数",
                   style: TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.white),
+                      fontWeight: FontWeight.w600, color: _whiteColor),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   currentScore.toString(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.white),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, color: _whiteColor),
                 ),
               ],
             ),
@@ -157,22 +169,22 @@ class _GamePageState extends State<GamePage> {
           width: 100,
           height: 60,
           decoration: const BoxDecoration(
-              color: Color.fromARGB(255, 189, 175, 153),
+              color: Color.fromARGB(255, 198, 155, 184),
               borderRadius: BorderRadius.all(Radius.circular(5))),
           child: Center(
             child: Column(
               children: [
                 const SizedBox(height: 12),
-                const Text(
+                Text(
                   "最高分",
                   style: TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.white),
+                      fontWeight: FontWeight.w600, color: _whiteColor),
                 ),
                 const SizedBox(height: 5),
                 Text(
                   highestScore.toString(),
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, color: Colors.white),
+                  style: TextStyle(
+                      fontWeight: FontWeight.w600, color: _whiteColor),
                 ),
               ],
             ),
@@ -187,7 +199,7 @@ class _GamePageState extends State<GamePage> {
             },
             style: const ButtonStyle(
                 backgroundColor: MaterialStatePropertyAll(
-                    Color.fromARGB(255, 130, 119, 103))),
+                    Color.fromARGB(255, 160, 115, 153))),
             child: const Text(
               "新游戏",
               style: TextStyle(
