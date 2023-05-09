@@ -663,15 +663,98 @@ class _CommunityPageState extends State<CommunityPage> {
                         SizedBox(
                           child: Column(
                             children: [
-                              SizedBox(
-                                height: 10,
-                              ),
+                              const SizedBox(height: 5),
                               //发帖人昵称
-                              Text("${_words[index]["name"]}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w500,
-                                    color: Color.fromARGB(230, 48, 48, 48),
-                                  )),
+                              Row(
+                                children: [
+                                  Text(
+                                    "${_words[index]["name"]}",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: Color.fromARGB(230, 48, 48, 48),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  if (_words[index]["mood"] == 1)
+                                    SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Icon(
+                                        const IconData(
+                                          0xea7f,
+                                          fontFamily: "MoodIcons",
+                                        ),
+                                        color: _blackColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  if (_words[index]["mood"] == 2)
+                                    SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Icon(
+                                        const IconData(
+                                          0xea83,
+                                          fontFamily: "MoodIcons",
+                                        ),
+                                        color: _blackColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  if (_words[index]["mood"] == 3)
+                                    SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Icon(
+                                        const IconData(
+                                          0xea82,
+                                          fontFamily: "MoodIcons",
+                                        ),
+                                        color: _blackColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  if (_words[index]["mood"] == 4)
+                                    SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Icon(
+                                        const IconData(
+                                          0xea81,
+                                          fontFamily: "MoodIcons",
+                                        ),
+                                        color: _blackColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  if (_words[index]["mood"] == 5)
+                                    SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Icon(
+                                        const IconData(
+                                          0xea80,
+                                          fontFamily: "MoodIcons",
+                                        ),
+                                        color: _blackColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  if (_words[index]["mood"] == 6)
+                                    SizedBox(
+                                      height: 25,
+                                      width: 25,
+                                      child: Icon(
+                                        const IconData(
+                                          0xea7e,
+                                          fontFamily: "MoodIcons",
+                                        ),
+                                        color: _blackColor,
+                                        size: 20,
+                                      ),
+                                    ),
+                                ],
+                              )
                             ],
                           ),
                         ),

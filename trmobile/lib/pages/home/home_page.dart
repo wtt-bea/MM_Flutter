@@ -13,6 +13,7 @@ import 'remind_page.dart';
 import '../music/music_page.dart';
 import '../letter/letter_page.dart';
 import 'game_page.dart';
+import 'mood_page.dart';
 
 class HomePage extends StatefulWidget {
   final account;
@@ -34,12 +35,15 @@ class _HomePageState extends State<HomePage> {
   List _likeList = [];
   int liken = 0;
   var imgKey = UniqueKey();
+  int mood = 0;
+  int _mood = 6;
 
   @override
   initState() {
     super.initState();
     _retrieveData();
     _getLike();
+    _getMood();
   }
 
   @override
@@ -75,9 +79,9 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: [
                   _avatar(),
-                  const SizedBox(
-                    height: 50,
-                  ),
+                  // const SizedBox(
+                  //   height: 50,
+                  // ),
                 ],
               ),
               Column(
@@ -381,10 +385,10 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  //头像显示
+  //头像心情显示
   Widget _avatar() {
     return SizedBox(
-        height: 100,
+        height: 150,
         width: 100,
         child: Column(
           children: [
@@ -395,6 +399,175 @@ class _HomePageState extends State<HomePage> {
                 backgroundImage: NetworkImage(
                     "http://172.20.10.5/images/${widget.account}.png?$imgKey"),
                 key: imgKey,
+              ),
+            ),
+            SizedBox(
+              width: 100,
+              height: 35,
+              child: Row(
+                children: [
+                  if (mood == 0)
+                    Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        TextButton(
+                            onPressed: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MoodPage(
+                                    account: widget.account,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  const IconData(
+                                    0xe610,
+                                    fontFamily: "MoodIcons",
+                                  ),
+                                  color: _blackColor,
+                                ),
+                                Text(
+                                  "添加心情",
+                                  style: TextStyle(
+                                      fontSize: 12, color: _blackColor),
+                                )
+                              ],
+                            ))
+                      ],
+                    ),
+                  if (mood != 0 && _mood == 1)
+                    Row(
+                      children: const [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          IconData(
+                            0xea7f,
+                            fontFamily: "MoodIcons",
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "开心",
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                  if (mood != 0 && _mood == 2)
+                    Row(
+                      children: const [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          IconData(
+                            0xea83,
+                            fontFamily: "MoodIcons",
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "难受",
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                  if (mood != 0 && _mood == 3)
+                    Row(
+                      children: const [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          IconData(
+                            0xea82,
+                            fontFamily: "MoodIcons",
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "伤心",
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                  if (mood != 0 && _mood == 4)
+                    Row(
+                      children: const [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          IconData(
+                            0xea81,
+                            fontFamily: "MoodIcons",
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "期待",
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                  if (mood != 0 && _mood == 5)
+                    Row(
+                      children: const [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          IconData(
+                            0xea80,
+                            fontFamily: "MoodIcons",
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "平淡",
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                  if (mood != 0 && _mood == 6)
+                    Row(
+                      children: const [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Icon(
+                          IconData(
+                            0xea7e,
+                            fontFamily: "MoodIcons",
+                          ),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          "生气",
+                          style: TextStyle(fontSize: 12),
+                        )
+                      ],
+                    ),
+                ],
               ),
             ),
           ],
@@ -843,5 +1016,16 @@ class _HomePageState extends State<HomePage> {
         ]),
       );
     });
+  }
+
+  //获取心情
+  Future<void> _getMood() async {
+    var result = await NetRequester.request(Apis.queryMood(widget.account));
+    if (result["data"] != 0 && mounted) {
+      setState(() {
+        _mood = result["data"];
+        mood = 1;
+      });
+    }
   }
 }

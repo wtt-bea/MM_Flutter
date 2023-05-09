@@ -15,8 +15,8 @@ class MyApp extends StatelessWidget {
       title: '漫漫',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.grey),
-      home: LoginPage(),
-      // home: HomePage(account: "1"),
+      // home: LoginPage(),
+      home: HomePage(account: "898989"),
     );
   }
 }

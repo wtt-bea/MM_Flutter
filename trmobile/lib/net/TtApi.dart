@@ -165,4 +165,14 @@ class Apis {
   static String search(String context) {
     return "/post/postSearch?&context=$context";
   }
+
+  //新增心情
+  static String addMood(String account, int mood) {
+    return "/user/updateMood?&account=$account&mood=$mood";
+  }
+
+  //查询心情
+  static String queryMood(String account) {
+    return "/user/queryMood?&account=$account";
+  }
 }

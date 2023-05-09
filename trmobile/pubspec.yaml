@@ -103,6 +103,9 @@ flutter:
     - family: PlanetIcons
       fonts:
         - asset: lib/assets/icons/planet.ttf
+    - family: MoodIcons
+      fonts:
+        - asset: lib/assets/icons/mood.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
