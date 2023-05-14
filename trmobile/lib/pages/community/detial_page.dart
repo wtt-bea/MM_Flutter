@@ -6,6 +6,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import '../../net/NetRequester.dart';
 import '../../net/TtApi.dart';
 import 'community_page.dart';
+import '../home/otherhome_page.dart';
 
 class DetialPage extends StatefulWidget {
   Map recipeImageList = {}; //传来的图片
@@ -548,28 +549,38 @@ class _DetialPageState extends State<DetialPage> {
   Widget _commentDetials(index) {
     return ListTile(
       leading: Container(
-        transform: Matrix4.translationValues(0.0, -10, 0.0),
-        margin: const EdgeInsets.only(left: 8),
-        width: 35,
-        height: 35,
+        transform: Matrix4.translationValues(-5, -10, 0.0),
+        // margin: const EdgeInsets.only(left: 8),
+        width: 55,
+        height: 55,
         //评论人头像
-        child: CircleAvatar(
-          backgroundImage: NetworkImage(
-              "http://172.20.10.5/images/${_commentList[index]["account"]}.png?$imgKey"),
+        child: TextButton(
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => OtherHomePage(
+                          account: _commentList[index]["account"],
+                        )));
+          },
+          child: CircleAvatar(
+            backgroundImage: NetworkImage(
+                "http://172.20.10.5/images/${_commentList[index]["account"]}.png?$imgKey"),
+          ),
         ),
       ),
       title: Container(
           //修改leading和title之间的距离
-          transform: Matrix4.translationValues(-5, 0.0, 0.0),
+          transform: Matrix4.translationValues(-20, 0.0, 0.0),
           child: Row(
             children: [
               SizedBox(
-                width: 265,
+                width: 255,
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       // decoration: BoxDecoration(color: Colors.black12),
-                      width: 265,
+                      width: 255,
                       height: 20,
                       //评论人用户名
                       child: Text(
@@ -582,7 +593,7 @@ class _DetialPageState extends State<DetialPage> {
                     ),
                     const SizedBox(height: 3),
                     SizedBox(
-                      width: 265,
+                      width: 255,
                       //评论内容
                       child: Text(
                         "${_commentList[index]["context"]}",
@@ -595,7 +606,7 @@ class _DetialPageState extends State<DetialPage> {
                     Row(
                       children: [
                         SizedBox(
-                          width: 240,
+                          width: 220,
                           height: 10,
                           //评论时间
                           child: Text(
@@ -636,7 +647,7 @@ class _DetialPageState extends State<DetialPage> {
                     ),
                     Container(
                       height: 1,
-                      width: 265,
+                      width: 285,
                       decoration: const BoxDecoration(
                           color: Color.fromARGB(10, 0, 0, 0)),
                     )

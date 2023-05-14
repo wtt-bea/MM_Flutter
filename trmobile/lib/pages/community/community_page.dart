@@ -14,6 +14,7 @@ import '../home/home_page.dart';
 import 'dart:async';
 import '../music/music_page.dart';
 import '../letter/letter_page.dart';
+import '../home/otherhome_page.dart';
 
 class CommunityPage extends StatefulWidget {
   final account;
@@ -629,15 +630,29 @@ class _CommunityPageState extends State<CommunityPage> {
     return Row(
       children: [
         const SizedBox(
-          width: 10,
+          width: 5,
         ),
         SizedBox(
+          height: 60,
+          width: 60,
           //发帖人头像
-          height: 45,
-          width: 45,
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-                "http://172.20.10.5/images/${_words[index]["account"]}.png?$imgKey"),
+          child: TextButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => OtherHomePage(
+                            account: _words[index]["account"],
+                          )));
+            },
+            child: SizedBox(
+              height: 60,
+              width: 60,
+              child: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    "http://172.20.10.5/images/${_words[index]["account"]}.png?$imgKey"),
+              ),
+            ),
           ),
         ),
         SizedBox(
@@ -657,9 +672,9 @@ class _CommunityPageState extends State<CommunityPage> {
                     width: 220,
                     child: Row(
                       children: [
-                        const SizedBox(
-                          width: 10,
-                        ),
+                        // const SizedBox(
+                        //   width: 10,
+                        // ),
                         SizedBox(
                           child: Column(
                             children: [
@@ -768,9 +783,9 @@ class _CommunityPageState extends State<CommunityPage> {
                 width: 270,
                 child: Row(
                   children: [
-                    const SizedBox(
-                      width: 10,
-                    ),
+                    // const SizedBox(
+                    //   width: 10,
+                    // ),
                     SizedBox(
                       height: 13,
                       width: 110,

@@ -336,7 +336,7 @@ class _HomePageState extends State<HomePage> {
       ),
       child: TextButton(
         child: Text(
-          "事项提醒",
+          "备忘录",
           style: TextStyle(
               color: _blackColor, fontWeight: FontWeight.w400, fontSize: 13),
         ),
