@@ -29,8 +29,9 @@ class _LoginPageState extends State<LoginPage> {
   Color _eyeColor = Colors.grey;
   List imageList = [
     'lib/assets/images/info.png',
-    'lib/assets/images/info.png',
-    'lib/assets/images/info.png'
+    'lib/assets/images/info2.png',
+    'lib/assets/images/info3.png',
+    'lib/assets/images/info4.png'
   ];
 
   @override

@@ -571,6 +571,51 @@ class _RegistPageState extends State<RegistPage> {
                         ],
                       );
                     });
+              } else if (_imageFile == null) {
+                showDialog(
+                    context: this.context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text(
+                          "注册提醒",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        content: const Text(
+                          "请选择头像",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        actions: <Widget>[
+                          OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.black),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              "确 认",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          )
+                        ],
+                      );
+                    });
               } else {
                 FormData formData = FormData.fromMap({
                   "account": _account,
@@ -584,7 +629,6 @@ class _RegistPageState extends State<RegistPage> {
                 var result = await dio.post(
                     "http://172.20.10.5:80/user/register",
                     data: formData);
-                print(result);
                 if (result.data['message'] == "true") {
                   Get.snackbar("成功登陆", "欢迎回家$_name",
                       backgroundColor: Color.fromARGB(200, 255, 255, 255),

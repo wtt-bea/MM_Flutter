@@ -268,17 +268,46 @@ class _ReadPageState extends State<ReadPage> {
                         fontWeight: FontWeight.w400,
                         color: _blackColor)),
               ),
-              const SizedBox(height: 25),
+              const SizedBox(height: 10),
               //信件概要
               SizedBox(
                 width: 200,
-                height: 80,
+                height: 60,
                 child: Text.rich(
                   TextSpan(
                       text: _letter[index]["context"],
                       style: const TextStyle(
                         fontWeight: FontWeight.w200,
                         fontSize: 14,
+                        // decoration: TextDecoration.underline,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => DetialPage(
+                                        account: widget.account,
+                                        sender: _letter[index]["account"],
+                                        stamp: _letter[index]["stamp"],
+                                        context: _letter[index]["context"],
+                                        name: _letter[index]["name"],
+                                      )));
+                        }),
+                  maxLines: 3,
+                ),
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: 200,
+                height: 20,
+                child: Text.rich(
+                  TextSpan(
+                      text: "发件人地址：${_letter[index]["address"]}",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 11,
                         // decoration: TextDecoration.underline,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -522,14 +551,13 @@ class _ReadPageState extends State<ReadPage> {
           backgroundColor: const Color.fromARGB(200, 255, 255, 255),
           duration: const Duration(seconds: 3));
     }
-    // await NetRequester.request(Apis.writeLetter(_recipient, 3, "", "888"));
     var data = await NetRequester.request(Apis.queryLetter(_recipient));
     if (mounted) {
       setState(() {
         _letter = data["data"];
-        print(_letter);
       });
     }
+    print(_letter);
   }
 
   void _getData() async {
@@ -540,7 +568,6 @@ class _ReadPageState extends State<ReadPage> {
       setState(() {
         _data = data["data"]["num"];
         _temperature = data["data"]["temperature"];
-        // print(data);
       });
     }
   }

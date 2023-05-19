@@ -33,7 +33,7 @@ class _InfochangePageState extends State<InfochangePage> {
   Color _eyereColor = Colors.grey;
   String _name = "";
   String _date = "";
-
+  String _newname = "";
   final picker = ImagePicker();
   XFile? _imageFile;
   String _planet = '';
@@ -531,6 +531,7 @@ class _InfochangePageState extends State<InfochangePage> {
                 onSaved: (v) {
                   if (v != "") {
                     _name = v!;
+                    _newname = v!;
                   }
                 },
               ),
@@ -688,7 +689,7 @@ class _InfochangePageState extends State<InfochangePage> {
     }
   }
 
-  //登录按钮
+  //更改按钮
   Widget _changeBtn(context) {
     return Container(
         width: 180,
@@ -701,37 +702,87 @@ class _InfochangePageState extends State<InfochangePage> {
         child: TextButton(
             onPressed: () async {
               (_formKey.currentState as FormState).save();
-              var Reg = RegExp(r"[0-9A-Za-z]{6,11}");
-              var result;
-              if (_newPlanet != "敬请期待") {
-                _planet = _newPlanet;
-              }
-              if (_imageFile != null) {
-                FormData formData = FormData.fromMap({
-                  "account": widget.account,
-                  "name": _name,
-                  "date": _date,
-                  "planet": _planet,
-                  "file": await MultipartFile.fromFile(_imageFile!.path,
-                      filename: "${widget.account}.png")
-                });
-                var dio = Dio();
-                result = await dio.post("http://172.20.10.5:80/user/updateUser",
-                    data: formData);
-                if (result.data['message'] == "true") {
-                  Get.snackbar("更新成功", "$_name",
-                      backgroundColor: Color.fromARGB(200, 255, 255, 255),
-                      duration: const Duration(seconds: 4));
-                  _retrieveData();
-                }
+              if (_newPlanet == "敬请期待" &&
+                  _imageFile == null &&
+                  _newname == "") {
+                showDialog(
+                    context: this.context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text(
+                          "更新提醒",
+                          style: TextStyle(
+                              fontSize: 16,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(15))),
+                        content: const Text(
+                          "请您至少更新一样信息",
+                          style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.black,
+                              fontWeight: FontWeight.w300),
+                        ),
+                        actions: <Widget>[
+                          OutlinedButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            style: OutlinedButton.styleFrom(
+                              side: const BorderSide(
+                                  width: 1.0, color: Colors.black),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            child: const Text(
+                              "确 认",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w300),
+                            ),
+                          )
+                        ],
+                      );
+                    });
               } else {
-                result = await NetRequester.request(
-                    Apis.updateUsers(widget.account, _date, _name, _planet));
-                if (result['message'] == "true") {
-                  Get.snackbar("更新成功", "$_name",
-                      backgroundColor: Color.fromARGB(200, 255, 255, 255),
-                      duration: const Duration(seconds: 4));
-                  _retrieveData();
+                var Reg = RegExp(r"[0-9A-Za-z]{6,11}");
+                var result;
+                if (_newPlanet != "敬请期待") {
+                  _planet = _newPlanet;
+                }
+                if (_imageFile != null) {
+                  FormData formData = FormData.fromMap({
+                    "account": widget.account,
+                    "name": _name,
+                    "date": _date,
+                    "planet": _planet,
+                    "file": await MultipartFile.fromFile(_imageFile!.path,
+                        filename: "${widget.account}.png")
+                  });
+                  var dio = Dio();
+                  result = await dio.post(
+                      "http://172.20.10.5:80/user/updateUser",
+                      data: formData);
+                  if (result.data['message'] == "true") {
+                    Get.snackbar("更新成功", "$_name",
+                        backgroundColor: Color.fromARGB(200, 255, 255, 255),
+                        duration: const Duration(seconds: 4));
+                    _retrieveData();
+                  }
+                } else {
+                  result = await NetRequester.request(
+                      Apis.updateUsers(widget.account, _date, _name, _planet));
+                  if (result['message'] == "true") {
+                    Get.snackbar("更新成功", "$_name",
+                        backgroundColor: Color.fromARGB(200, 255, 255, 255),
+                        duration: const Duration(seconds: 4));
+                    _retrieveData();
+                  }
                 }
               }
             },

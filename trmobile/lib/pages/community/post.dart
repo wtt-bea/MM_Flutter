@@ -29,7 +29,7 @@ class _PostPageState extends State<PostPage> {
       images: <ImageFile>[] // array of pre/default selected images
       );
   final TextEditingController _postText = TextEditingController();
-
+  int flag = 0;
   @override
   initState() {
     super.initState();
@@ -75,73 +75,7 @@ class _PostPageState extends State<PostPage> {
                       ),
                       //发布按钮
                       onPressed: () async {
-                        var uuid = Uuid();
-                        var post_id = uuid.v1();
-                        post_id = post_id.substring(0, 8);
-                        var result_text = await NetRequester.request(
-                            Apis.posttext(
-                                post_id, widget.account, _postText.text));
-                        final images =
-                            controller.images; // return Iterable<ImageFile>
-                        for (final image in images) {
-                          if (image.hasPath) {
-                            var pic_id = uuid.v1();
-                            pic_id = pic_id.substring(0, 8);
-                            FormData formData = FormData.fromMap({
-                              'pic_id': pic_id,
-                              'post_id': post_id,
-                              'file': await MultipartFile.fromFile(image.path!,
-                                  filename: image.name),
-                            });
-                            var dio = Dio();
-                            //上传帖子图片
-                            var result_pic = await dio.post(
-                                "http://172.20.10.5:80/post_pic/pic",
-                                data: formData);
-                            if (result_pic.data["message"] == "false") {
-                              showDialog(
-                                  context: this.context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      shape: const RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(15))),
-                                      content: const Text(
-                                        "T_T网络出现了小错误",
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w300),
-                                      ),
-                                      actions: <Widget>[
-                                        OutlinedButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                          style: OutlinedButton.styleFrom(
-                                            side: const BorderSide(
-                                                width: 1.0,
-                                                color: Colors.black),
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                            ),
-                                          ),
-                                          child: const Text(
-                                            "确 认",
-                                            style: TextStyle(
-                                                fontSize: 15,
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w300),
-                                          ),
-                                        )
-                                      ],
-                                    );
-                                  });
-                            }
-                          }
-                        }
-                        if (result_text["message"] == "false") {
+                        if (flag == 0 || _postText.text == "") {
                           showDialog(
                               context: this.context,
                               builder: (context) {
@@ -150,7 +84,46 @@ class _PostPageState extends State<PostPage> {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(15))),
                                   content: const Text(
-                                    "T_T网络出现了小错误",
+                                    "请输入文字且至少一张图片",
+                                    style: TextStyle(
+                                        fontSize: 15,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w300),
+                                  ),
+                                  actions: <Widget>[
+                                    OutlinedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      style: OutlinedButton.styleFrom(
+                                        side: const BorderSide(
+                                            width: 1.0, color: Colors.black),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                      ),
+                                      child: const Text(
+                                        "确 认",
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w300),
+                                      ),
+                                    )
+                                  ],
+                                );
+                              });
+                        } else if (_postText.text.length >= 100) {
+                          showDialog(
+                              context: this.context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: const RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(15))),
+                                  content: const Text(
+                                    "请输入少于100字",
                                     style: TextStyle(
                                         fontSize: 15,
                                         color: Colors.black,
@@ -181,19 +154,128 @@ class _PostPageState extends State<PostPage> {
                                 );
                               });
                         } else {
-                          Get.snackbar("发布成功", "又在漫漫宇宙留下了一些痕迹呢~",
-                              backgroundColor:
-                                  Color.fromARGB(200, 255, 255, 255),
-                              duration: const Duration(seconds: 3));
-                          // ignore: use_build_context_synchronously
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => CommunityPage(
-                                account: widget.account,
-                              ),
-                            ),
-                          );
+                          var uuid = Uuid();
+                          var post_id = uuid.v1();
+                          post_id = post_id.substring(0, 8);
+                          var result_text = await NetRequester.request(
+                              Apis.posttext(
+                                  post_id, widget.account, _postText.text));
+                          final images =
+                              controller.images; // return Iterable<ImageFile>
+                          for (final image in images) {
+                            if (image.hasPath) {
+                              var pic_id = uuid.v1();
+                              pic_id = pic_id.substring(0, 8);
+                              FormData formData = FormData.fromMap({
+                                'pic_id': pic_id,
+                                'post_id': post_id,
+                                'file': await MultipartFile.fromFile(
+                                    image.path!,
+                                    filename: image.name),
+                              });
+                              var dio = Dio();
+                              //上传帖子图片
+                              var result_pic = await dio.post(
+                                  "http://172.20.10.5:80/post_pic/pic",
+                                  data: formData);
+                              if (result_pic.data["message"] == "false") {
+                                showDialog(
+                                    context: this.context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        content: const Text(
+                                          "T_T网络出现了小错误",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        actions: <Widget>[
+                                          OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: OutlinedButton.styleFrom(
+                                              side: const BorderSide(
+                                                  width: 1.0,
+                                                  color: Colors.black),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              "确 认",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    });
+                              }
+                              if (result_text["message"] == "false") {
+                                showDialog(
+                                    context: this.context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(15))),
+                                        content: const Text(
+                                          "T_T网络出现了小错误",
+                                          style: TextStyle(
+                                              fontSize: 15,
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w300),
+                                        ),
+                                        actions: <Widget>[
+                                          OutlinedButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            style: OutlinedButton.styleFrom(
+                                              side: const BorderSide(
+                                                  width: 1.0,
+                                                  color: Colors.black),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                            child: const Text(
+                                              "确 认",
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          )
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                Get.snackbar("发布成功", "又在漫漫宇宙留下了一些痕迹呢~",
+                                    backgroundColor:
+                                        Color.fromARGB(200, 255, 255, 255),
+                                    duration: const Duration(seconds: 3));
+                                // ignore: use_build_context_synchronously
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CommunityPage(
+                                      account: widget.account,
+                                    ),
+                                  ),
+                                );
+                              }
+                            }
+                          }
                         }
                       },
                       child: const Text(
@@ -254,6 +336,11 @@ class _PostPageState extends State<PostPage> {
               child: MultiImagePickerView(
                 onChange: (list) {
                   debugPrint(list.toString());
+                  if (mounted) {
+                    setState(() {
+                      flag = 1;
+                    });
+                  }
                 },
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200),

@@ -142,7 +142,7 @@ class _MusicPageState extends State<MusicPage> {
                           size: 24,
                         ),
                         const SizedBox(width: 5),
-                        Text("白噪音",
+                        Text("轻音乐",
                             style: TextStyle(
                                 color: flag_1 ? _whiteColor : _blackColor,
                                 fontSize: 13,
@@ -185,7 +185,7 @@ class _MusicPageState extends State<MusicPage> {
                           color: flag_2 ? _whiteColor : _blackColor,
                         ),
                         const SizedBox(width: 5),
-                        Text("轻音乐",
+                        Text("白噪音",
                             style: TextStyle(
                                 color: flag_2 ? _whiteColor : _blackColor,
                                 fontSize: 13,

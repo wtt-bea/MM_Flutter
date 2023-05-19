@@ -24,7 +24,7 @@ class Game2048PanelState extends State<Game2048Panel> {
   final List _gameMap =
       List.generate(SIZE, (_) => List<int>.generate(SIZE, (_) => 0));
   final Map<int, Color> _mapValueToColor = {
-    0: Color.fromARGB(255, 249, 225, 232),
+    0: Color.fromARGB(255, 254, 244, 247),
     2: Color.fromARGB(255, 255, 208, 223),
     4: Color.fromARGB(255, 198, 155, 184),
     8: Color.fromARGB(255, 255, 108, 137),
